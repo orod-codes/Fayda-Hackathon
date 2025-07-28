@@ -3,12 +3,18 @@
 # Hakim AI
 
 
+<<<<<<< HEAD
 ## Contributors
 
 - Dorsis Girma
 - Hiba Khalid
 - Sebrina Semir
   
+=======
+## Contributors  
+- Dorsis Girma  
+---
+>>>>>>> c141d06 (Update README.md)
 ## Project Synopsis
 
 ### 1. Problem Statement
