@@ -15,6 +15,27 @@ export default function HomePage() {
     { code: "or" as Language, name: "Afaan Oromo", flag: "🇾🇪" },
   ]
 
+  const handlePatientLogin = async () => {
+    try {
+      const res = await fetch('http://localhost:3001/api/auth/login', {
+        credentials: 'include'
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const data = await res.json();
+      if (data.authorizationUrl) {
+        window.location.href = data.authorizationUrl;
+      } else {
+        console.error('Authorization URL not found in response');
+      }
+    } catch (error) {
+      console.error('Failed to initiate login:', error);
+      // Fallback to patient page for demo
+      router.push('/patient');
+    }
+  }
+
   const userRoles = [
         {
           id: "patient",
@@ -23,7 +44,8 @@ export default function HomePage() {
           icon: User,
           color: "bg-blue-500",
           route: "/patient",
-          requiresFayda: true
+          requiresFayda: true,
+          onClick: handlePatientLogin
         }
   ]
 
@@ -83,7 +105,7 @@ export default function HomePage() {
                 <div
                   key={role.id}
                   className="group relative bg-zinc-800/40 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-6 hover:bg-zinc-800/60 hover:border-sky-500/50 transition-all duration-500 cursor-pointer transform hover:scale-105 hover:shadow-2xl"
-                  onClick={() => router.push(role.route)}
+                  onClick={role.onClick || (() => router.push(role.route))}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-sky-500/10 to-blue-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="relative flex items-center space-x-4">

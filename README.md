@@ -137,6 +137,7 @@ Handling sensitive health data requires a privacy-first approach. Our strategy i
   To prevent false information, our EMR will differentiate between patient-reported data (marked as unverified) and professionally-verified data. Doctors will have the ability to review and verify patient-reported information, creating a trusted and reliable medical history.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 ## Business Model
 
@@ -154,6 +155,8 @@ We will pursue a multi-stream revenue model to ensure sustainability and growth:
 
 
 >>>>>>> 3f2b9bf (Update README.md)
+=======
+>>>>>>> 630ced9 (Update README.md)
 ## Tech Stack
 
 - **Frontend:** React / Next.js (for a responsive web app)
