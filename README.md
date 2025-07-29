@@ -1,6 +1,10 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <img align=center width="495" height="494" alt="image" src="https://github.com/user-attachments/assets/6d118565-e581-441d-9f4f-5727ba449f57" />
 # Hakim AI
+=======
+# [Project Title – HAKIM AI]
+>>>>>>> 0b9334e (Update README.md)
 
 
 
