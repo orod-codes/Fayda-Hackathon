@@ -14,6 +14,14 @@
 # [Project Title – HAKim AI]
 >>>>>>> 0719684 (Update README.md)
 
+<<<<<<< HEAD
+=======
+## Contributors  
+- Dorsis Girma
+- Hiba Khalid
+- Sebrina Semir
+---
+>>>>>>> 54f41fe (Update README.md)
 ## Project Synopsis
 
 ### 1. Problem Statement
