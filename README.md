@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <img align=center width="495" height="494" alt="image" src="https://github.com/user-attachments/assets/6d118565-e581-441d-9f4f-5727ba449f57" />
 # Hakim AI
 =======
@@ -26,6 +27,16 @@
 - Sebrina Semir
 ---
 >>>>>>> 54f41fe (Update README.md)
+=======
+# Hakim AI
+
+## Contributors
+
+- Dorsis Girma
+- Hiba Khalid
+- Sebrina Semir
+  
+>>>>>>> 3f2b9bf (Update README.md)
 ## Project Synopsis
 
 ### 1. Problem Statement
@@ -125,19 +136,42 @@ Handling sensitive health data requires a privacy-first approach. Our strategy i
 - **Data Verification:**  
   To prevent false information, our EMR will differentiate between patient-reported data (marked as unverified) and professionally-verified data. Doctors will have the ability to review and verify patient-reported information, creating a trusted and reliable medical history.
 
+<<<<<<< HEAD
+=======
+## Business Model
+
+We will pursue a multi-stream revenue model to ensure sustainability and growth:
+
+- **Freemium for Patients:**  
+  A free tier for basic features to drive user acquisition, and a Hakim Plus subscription for advanced AI features and unlimited storage.
+
+- **SaaS for Professionals:**  
+  A Professional Pro subscription for individual doctors and an Enterprise License for clinics and hospitals, offering advanced tools and management dashboards.
+
+- **Transactional Revenue:**  
+  A commission on telemedicine consultations and referral fees from partnerships with labs and pharmacies.
+
+
+
+>>>>>>> 3f2b9bf (Update README.md)
 ## Tech Stack
 
 - **Frontend:** React / Next.js (for a responsive web app)
 - **Backend:** Node.js (Express.js) / Python (Django/FastAPI)
 - **Database:** PostgreSQL / MongoDB (for flexible, structured EMR data)
 - **AI & Machine Learning:**
+<<<<<<< HEAD
   - Primary: ChatGPT OpenAI Service (API) [future: Self-hosted GPT model]
+=======
+  - Primary: Azure OpenAI Service
+>>>>>>> 3f2b9bf (Update README.md)
   - Secondary/Self-Hosted: Python, TensorFlow/PyTorch, Tesseract, Hugging Face (BioBERT)
 - **Authentication:** Fayda OIDC Integration
 - **Cloud & Deployment:** Docker, AWS / Azure (with a focus on African data centers)
 - 
 ## Hackathon MVP Scope
 To demonstrate the core value proposition, our MVP will focus on the complete data loop in a simplified way:
+<<<<<<< HEAD
 
 - **Patient Side:**  
   A user logs in with Fayda, manually enters one allergy, and asks the chatbot a question. The chatbot's response will prove it has access to the entered allergy.
@@ -153,8 +187,17 @@ To demonstrate the core value proposition, our MVP will focus on the complete da
 <img width="1358" height="320" alt="image" src="https://github.com/user-attachments/assets/b2c2c0a6-de65-4c82-ac8b-3bc5b3be3767" />
 
 > 🏁 *This project is being built for the 2025 Fayda Hackathon (July 26 – August 4) under the HealthTech track.*
+=======
+>>>>>>> 3f2b9bf (Update README.md)
 
----
+- **Patient Side:**  
+  A user logs in with Fayda, manually enters one allergy, and asks the chatbot a question. The chatbot's response will prove it has access to the entered allergy.
+
+- **Professional Side:**  
+  A "Doctor" user logs in, sees a sample patient, and uses a simple form to add a new prescription to that patient's record.
+
+- **Closing the Loop:**  
+  The patient can then ask the chatbot, "What is my latest prescription?" The chatbot will correctly state the medication entered by the doctor, proving the two-sided connection and the real-time update of the shared medical history.
 
 # 🚀 Quick Start
 
