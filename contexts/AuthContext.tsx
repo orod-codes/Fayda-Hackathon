@@ -28,13 +28,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check for stored user data on app load
-    const storedUser = localStorage.getItem("hakmin_user")
+    const storedUser = localStorage.getItem("hakim_user")
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser))
       } catch (error) {
         console.error("Error parsing stored user data:", error)
-        localStorage.removeItem("hakmin_user")
+        localStorage.removeItem("hakim_user")
       }
     }
     setIsLoading(false)
@@ -42,12 +42,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = (userData: User) => {
     setUser(userData)
-    localStorage.setItem("hakmin_user", JSON.stringify(userData))
+    localStorage.setItem("hakim_user", JSON.stringify(userData))
   }
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem("hakmin_user")
+    localStorage.removeItem("hakim_user")
   }
 
   const isAuthenticated = !!user
