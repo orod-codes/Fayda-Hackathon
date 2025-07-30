@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 13 13 13;
+    --foreground: 229 229 229;
+    --card: 23 23 23;
+    --card-foreground: 229 229 229;
+    --popover: 23 23 23;
+    --popover-foreground: 229 229 229;
+    --primary: 56 189 248;
+    --primary-foreground: 0 0 0;
+    --secondary: 38 38 38;
+    --secondary-foreground: 229 229 229;
+    --muted: 38 38 38;
+    --muted-foreground: 163 163 163;
+    --accent: 38 38 38;
+    --accent-foreground: 229 229 229;
+    --destructive: 239 68 68;
+    --destructive-foreground: 248 250 252;
+    --border: 38 38 38;
+    --input: 38 38 38;
+    --ring: 56 189 248;
+    --radius: 0.375rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-jetbrains-mono), "Fira Code", "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", Menlo,
+      monospace;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(23 23 23);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(64 64 64);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(82 82 82);
+}
+
+/* Code-like selection */
+::selection {
+  background: rgba(56, 189, 248, 0.3);
+}
+
+/* Terminal-like cursor */
+.terminal-cursor::after {
+  content: "█";
+  animation: blink 1s infinite;
+  color: rgb(56 189 248);
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
