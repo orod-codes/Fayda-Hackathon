@@ -6,8 +6,6 @@
 - **Hiba Khalid**
 - **Sebrina Semir**
 
-> 🏁 *This project is being built for the 2025 Fayda Hackathon (July 26 – August 4) under the HealthTech track.*
-
 ---
 
 ## Project Synopsis
