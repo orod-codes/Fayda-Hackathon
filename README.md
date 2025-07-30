@@ -1,3 +1,5 @@
+<img align=center width="399" height="393" alt="image" src="https://github.com/user-attachments/assets/072ceced-3ee1-4225-80d8-ab0e5db7b7d3" />
+
 # Hakim AI
 
 ## Contributors
