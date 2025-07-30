@@ -10,6 +10,13 @@ import { useTheme } from "@/contexts/ThemeContext"
 import { useAuth } from "@/contexts/AuthContext"
 import { useRouter } from "next/navigation"
 import ProtectedRoute from "@/components/ProtectedRoute"
+import AddHospitalForm from "@/components/AddHospitalForm"
+import CreateAdminForm from "@/components/CreateAdminForm"
+import SystemBackupForm from "@/components/SystemBackupForm"
+import SecurityAuditForm from "@/components/SecurityAuditForm"
+import ViewHospitalForm from "@/components/ViewHospitalForm"
+import EditHospitalForm from "@/components/EditHospitalForm"
+import HospitalSettingsForm from "@/components/HospitalSettingsForm"
 import {
   Shield, Users, Building, Activity, AlertTriangle, Plus, Search, Settings, LogOut,
   BarChart3, Phone, Mail, Calendar, FileText, Globe, Database, ArrowLeft,
@@ -25,10 +32,63 @@ export default function SuperAdminPage() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState("overview")
   const [searchQuery, setSearchQuery] = useState("")
+  const [showAddHospitalForm, setShowAddHospitalForm] = useState(false)
+  const [showCreateAdminForm, setShowCreateAdminForm] = useState(false)
+  const [showSystemBackupForm, setShowSystemBackupForm] = useState(false)
+  const [showSecurityAuditForm, setShowSecurityAuditForm] = useState(false)
+  const [selectedHospital, setSelectedHospital] = useState<any>(null)
+  const [showViewHospitalForm, setShowViewHospitalForm] = useState(false)
+  const [showEditHospitalForm, setShowEditHospitalForm] = useState(false)
+  const [showHospitalSettingsForm, setShowHospitalSettingsForm] = useState(false)
 
   const handleLogout = () => {
     logout()
     router.push("/")
+  }
+
+  const handleAddHospital = (hospitalData: any) => {
+    console.log("Adding hospital:", hospitalData)
+    alert("Hospital added successfully!")
+  }
+
+  const handleCreateAdmin = (adminData: any) => {
+    console.log("Creating admin:", adminData)
+    alert("Admin account created successfully!")
+  }
+
+  const handleSystemBackup = (backupData: any) => {
+    console.log("System backup:", backupData)
+    alert("System backup initiated successfully!")
+  }
+
+  const handleSecurityAudit = (auditData: any) => {
+    console.log("Security audit:", auditData)
+    alert("Security audit completed successfully!")
+  }
+
+  const handleViewHospital = (hospital: any) => {
+    setSelectedHospital(hospital)
+    setShowViewHospitalForm(true)
+  }
+
+  const handleEditHospital = (hospital: any) => {
+    setSelectedHospital(hospital)
+    setShowEditHospitalForm(true)
+  }
+
+  const handleHospitalSettings = (hospital: any) => {
+    setSelectedHospital(hospital)
+    setShowHospitalSettingsForm(true)
+  }
+
+  const handleUpdateHospital = (hospitalData: any) => {
+    console.log("Updating hospital:", hospitalData)
+    alert("Hospital updated successfully!")
+  }
+
+  const handleHospitalSettingsUpdate = (settingsData: any) => {
+    console.log("Updating hospital settings:", settingsData)
+    alert("Hospital settings updated successfully!")
   }
 
   const hospitals = [
@@ -263,19 +323,31 @@ export default function SuperAdminPage() {
                       <CardDescription className="text-zinc-400">Common administrative tasks</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                      <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                      <Button 
+                        className="w-full bg-blue-500 hover:bg-blue-600"
+                        onClick={() => setShowAddHospitalForm(true)}
+                      >
                         <Plus className="h-4 w-4 mr-2" />
                         Add New Hospital
                       </Button>
-                      <Button className="w-full bg-green-500 hover:bg-green-600">
+                      <Button 
+                        className="w-full bg-green-500 hover:bg-green-600"
+                        onClick={() => setShowCreateAdminForm(true)}
+                      >
                         <UserPlus className="h-4 w-4 mr-2" />
                         Create Admin Account
                       </Button>
-                      <Button className="w-full bg-purple-500 hover:bg-purple-600">
+                      <Button 
+                        className="w-full bg-purple-500 hover:bg-purple-600"
+                        onClick={() => setShowSystemBackupForm(true)}
+                      >
                         <Database className="h-4 w-4 mr-2" />
                         System Backup
                       </Button>
-                      <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                      <Button 
+                        className="w-full bg-orange-500 hover:bg-orange-600"
+                        onClick={() => setShowSecurityAuditForm(true)}
+                      >
                         <Monitor className="h-4 w-4 mr-2" />
                         Security Audit
                       </Button>
@@ -320,12 +392,20 @@ export default function SuperAdminPage() {
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-64 bg-zinc-700 border-zinc-600 text-zinc-100 placeholder:text-zinc-400"
                     />
-                    <Button className="bg-sky-500 hover:bg-sky-600">
+                    <Button 
+                      className="bg-sky-500 hover:bg-sky-600"
+                      onClick={() => {
+                        alert(`Searching for hospitals with query: "${searchQuery}"`)
+                      }}
+                    >
                       <Search className="h-4 w-4 mr-2" />
                       Search
                     </Button>
                   </div>
-                  <Button className="bg-green-500 hover:bg-green-600">
+                  <Button 
+                    className="bg-green-500 hover:bg-green-600"
+                    onClick={() => setShowAddHospitalForm(true)}
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Add Hospital
                   </Button>
@@ -357,13 +437,28 @@ export default function SuperAdminPage() {
                               {hospital.status}
                             </Badge>
                             <div className="flex space-x-2">
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700">
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="border-zinc-600 text-zinc-300 hover:bg-zinc-700"
+                                onClick={() => handleViewHospital(hospital)}
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700">
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="border-zinc-600 text-zinc-300 hover:bg-zinc-700"
+                                onClick={() => handleEditHospital(hospital)}
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700">
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="border-zinc-600 text-zinc-300 hover:bg-zinc-700"
+                                onClick={() => handleHospitalSettings(hospital)}
+                              >
                                 <Settings className="h-4 w-4" />
                               </Button>
                             </div>
@@ -424,11 +519,21 @@ export default function SuperAdminPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                      <Button 
+                        className="w-full bg-blue-500 hover:bg-blue-600"
+                        onClick={() => {
+                          alert("Running comprehensive security audit...")
+                        }}
+                      >
                         <Monitor className="h-4 w-4 mr-2" />
                         Run Security Audit
                       </Button>
-                      <Button className="w-full bg-green-500 hover:bg-green-600">
+                      <Button 
+                        className="w-full bg-green-500 hover:bg-green-600"
+                        onClick={() => {
+                          alert("Backing up security keys to secure location...")
+                        }}
+                      >
                         <Database className="h-4 w-4 mr-2" />
                         Backup Security Keys
                       </Button>
@@ -490,15 +595,30 @@ export default function SuperAdminPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                      <Button 
+                        className="w-full bg-blue-500 hover:bg-blue-600"
+                        onClick={() => {
+                          alert("Initiating system backup...")
+                        }}
+                      >
                         <Database className="h-4 w-4 mr-2" />
                         Backup System
                       </Button>
-                      <Button className="w-full bg-green-500 hover:bg-green-600">
+                      <Button 
+                        className="w-full bg-green-500 hover:bg-green-600"
+                        onClick={() => {
+                          alert("Checking for system updates...")
+                        }}
+                      >
                         <Globe className="h-4 w-4 mr-2" />
                         Update System
                       </Button>
-                      <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                      <Button 
+                        className="w-full bg-orange-500 hover:bg-orange-600"
+                        onClick={() => {
+                          alert("Opening advanced configuration panel...")
+                        }}
+                      >
                         <Settings className="h-4 w-4 mr-2" />
                         Advanced Config
                       </Button>
@@ -509,8 +629,60 @@ export default function SuperAdminPage() {
             )}
           </div>
         </div>
-              </main>
-      </div>
-    </ProtectedRoute>
-  )
+      </main>
+
+      {/* Form Modals */}
+      {showAddHospitalForm && (
+        <AddHospitalForm
+          onClose={() => setShowAddHospitalForm(false)}
+          onSubmit={handleAddHospital}
+        />
+      )}
+
+      {showCreateAdminForm && (
+        <CreateAdminForm
+          onClose={() => setShowCreateAdminForm(false)}
+          onSubmit={handleCreateAdmin}
+        />
+      )}
+
+      {showSystemBackupForm && (
+        <SystemBackupForm
+          onClose={() => setShowSystemBackupForm(false)}
+          onSubmit={handleSystemBackup}
+        />
+      )}
+
+      {showSecurityAuditForm && (
+        <SecurityAuditForm
+          onClose={() => setShowSecurityAuditForm(false)}
+          onSubmit={handleSecurityAudit}
+        />
+      )}
+
+      {showViewHospitalForm && selectedHospital && (
+        <ViewHospitalForm
+          onClose={() => setShowViewHospitalForm(false)}
+          hospital={selectedHospital}
+        />
+      )}
+
+      {showEditHospitalForm && selectedHospital && (
+        <EditHospitalForm
+          onClose={() => setShowEditHospitalForm(false)}
+          onSubmit={handleUpdateHospital}
+          hospital={selectedHospital}
+        />
+      )}
+
+      {showHospitalSettingsForm && selectedHospital && (
+        <HospitalSettingsForm
+          onClose={() => setShowHospitalSettingsForm(false)}
+          onSubmit={handleHospitalSettingsUpdate}
+          hospital={selectedHospital}
+        />
+      )}
+    </div>
+  </ProtectedRoute>
+)
 } 

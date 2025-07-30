@@ -11,6 +11,13 @@ import { useTheme } from "@/contexts/ThemeContext"
 import { useAuth } from "@/contexts/AuthContext"
 import { useRouter } from "next/navigation"
 import ProtectedRoute from "@/components/ProtectedRoute"
+import AddDoctorForm from "@/components/AddDoctorForm"
+import ViewDoctorForm from "@/components/ViewDoctorForm"
+import EditDoctorForm from "@/components/EditDoctorForm"
+import AddPatientForm from "@/components/AddPatientForm"
+import ViewPatientForm from "@/components/ViewPatientForm"
+import EditPatientForm from "@/components/EditPatientForm"
+import HospitalAdminSettingsForm from "@/components/HospitalAdminSettingsForm"
 import { 
   Users, 
   Stethoscope, 
@@ -48,10 +55,82 @@ export default function HospitalAdminPage() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState("overview")
   const [searchQuery, setSearchQuery] = useState("")
+  const [showAddDoctorForm, setShowAddDoctorForm] = useState(false)
+  const [selectedDoctor, setSelectedDoctor] = useState<any>(null)
+  const [showViewDoctorForm, setShowViewDoctorForm] = useState(false)
+  const [showEditDoctorForm, setShowEditDoctorForm] = useState(false)
+
+  // Patient state
+  const [patients, setPatients] = useState([
+    {
+      firstName: "Amanuel",
+      lastName: "Tadesse",
+      gender: "male",
+      dateOfBirth: "1990-01-01",
+      phone: "+251 911 111 111",
+      email: "amanuel.tadesse@email.com",
+      address: "Addis Ababa, Ethiopia",
+      medicalHistory: "Diabetes, Hypertension",
+      emergencyContact: "Sara Tadesse, +251 922 222 222"
+    },
+    {
+      firstName: "Mekdes",
+      lastName: "Bekele",
+      gender: "female",
+      dateOfBirth: "1985-05-12",
+      phone: "+251 922 333 444",
+      email: "mekdes.bekele@email.com",
+      address: "Adama, Ethiopia",
+      medicalHistory: "Asthma",
+      emergencyContact: "Bekele Mekonnen, +251 933 444 555"
+    }
+  ])
+  const [patientSearch, setPatientSearch] = useState("")
+  const [showAddPatientForm, setShowAddPatientForm] = useState(false)
+  const [selectedPatient, setSelectedPatient] = useState<any>(null)
+  const [showViewPatientForm, setShowViewPatientForm] = useState(false)
+  const [showEditPatientForm, setShowEditPatientForm] = useState(false)
+
+  // Hospital settings state
+  const [hospitalSettings, setHospitalSettings] = useState({
+    twoFactorAuth: true,
+    sessionTimeout: "8",
+    autoBackup: true,
+    dataRetention: "7",
+    notifications: true,
+    maintenanceMode: false,
+    language: "en",
+    timezone: "Africa/Addis_Ababa"
+  })
+  const [showSettingsForm, setShowSettingsForm] = useState(false)
+  const handleSaveSettings = (settings: any) => {
+    setHospitalSettings(settings)
+    alert("Settings saved successfully!")
+  }
 
   const handleLogout = () => {
     logout()
     router.push("/")
+  }
+
+  const handleAddDoctor = (doctorData: any) => {
+    console.log("Adding doctor:", doctorData)
+    alert("Doctor added successfully!")
+  }
+
+  const handleViewDoctor = (doctor: any) => {
+    setSelectedDoctor(doctor)
+    setShowViewDoctorForm(true)
+  }
+
+  const handleEditDoctor = (doctor: any) => {
+    setSelectedDoctor(doctor)
+    setShowEditDoctorForm(true)
+  }
+
+  const handleUpdateDoctor = (doctorData: any) => {
+    console.log("Updating doctor:", doctorData)
+    alert("Doctor updated successfully!")
   }
 
   const doctors = [
@@ -94,6 +173,36 @@ export default function HospitalAdminPage() {
     doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  const filteredPatients = patients.filter(
+    p =>
+      p.firstName.toLowerCase().includes(patientSearch.toLowerCase()) ||
+      p.lastName.toLowerCase().includes(patientSearch.toLowerCase()) ||
+      p.phone.includes(patientSearch)
+  )
+
+  const handleAddPatient = (patient: any) => {
+    setPatients(prev => [...prev, patient])
+    alert("Patient added successfully!")
+  }
+  const handleViewPatient = (patient: any) => {
+    setSelectedPatient(patient)
+    setShowViewPatientForm(true)
+  }
+  const handleEditPatient = (patient: any) => {
+    setSelectedPatient(patient)
+    setShowEditPatientForm(true)
+  }
+  const handleUpdatePatient = (updated: any) => {
+    setPatients(prev => prev.map(p => (p === selectedPatient ? updated : p)))
+    alert("Patient updated successfully!")
+  }
+  const handleDeletePatient = (patient: any) => {
+    if (confirm(`Are you sure you want to delete ${patient.firstName} ${patient.lastName}?`)) {
+      setPatients(prev => prev.filter(p => p !== patient))
+      alert("Patient deleted successfully!")
+    }
+  }
 
   const hospitalStats = {
     totalPatients: 156,
@@ -312,7 +421,10 @@ export default function HospitalAdminPage() {
 
                 {/* Quick Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Card className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer">
+                  <Card 
+                    className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer"
+                    onClick={() => setShowAddDoctorForm(true)}
+                  >
                     <CardContent className="p-6 text-center">
                       <UserPlus className="h-8 w-8 text-blue-400 mx-auto mb-3" />
                       <h3 className="font-semibold text-zinc-100">Add New Doctor</h3>
@@ -320,7 +432,10 @@ export default function HospitalAdminPage() {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer">
+                  <Card 
+                    className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer"
+                    onClick={() => setActiveTab("analytics")}
+                  >
                     <CardContent className="p-6 text-center">
                       <BarChart3 className="h-8 w-8 text-green-400 mx-auto mb-3" />
                       <h3 className="font-semibold text-zinc-100">View Analytics</h3>
@@ -328,7 +443,10 @@ export default function HospitalAdminPage() {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer">
+                  <Card 
+                    className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer"
+                    onClick={() => setActiveTab("activity")}
+                  >
                     <CardContent className="p-6 text-center">
                       <Activity className="h-8 w-8 text-purple-400 mx-auto mb-3" />
                       <h3 className="font-semibold text-zinc-100">Monitor Activity</h3>
@@ -383,7 +501,10 @@ export default function HospitalAdminPage() {
                       Search
                     </Button>
                   </div>
-                  <Button className="bg-green-500 hover:bg-green-600">
+                  <Button 
+                    className="bg-green-500 hover:bg-green-600"
+                    onClick={() => setShowAddDoctorForm(true)}
+                  >
                     <UserPlus className="h-4 w-4 mr-2" />
                     Add Doctor
                   </Button>
@@ -423,13 +544,29 @@ export default function HospitalAdminPage() {
                               {doctor.status}
                             </Badge>
                             <div className="flex space-x-2">
-                              <Button variant="outline" size="sm">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => handleViewDoctor(doctor)}
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button variant="outline" size="sm">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => handleEditDoctor(doctor)}
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
-                              <Button variant="outline" size="sm">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => {
+                                  if (confirm(`Are you sure you want to delete ${doctor.name}?`)) {
+                                    alert("Doctor deleted successfully!")
+                                  }
+                                }}
+                              >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
@@ -533,10 +670,130 @@ export default function HospitalAdminPage() {
                 </Card>
               </div>
             )}
+
+            {activeTab === "patients" && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <div className="flex space-x-2">
+                    <Input
+                      placeholder="Search patients..."
+                      value={patientSearch}
+                      onChange={e => setPatientSearch(e.target.value)}
+                      className="w-64 bg-zinc-700 border-zinc-600 text-zinc-100 placeholder:text-zinc-400"
+                    />
+                    <Button className="bg-sky-500 hover:bg-sky-600">
+                      Search
+                    </Button>
+                  </div>
+                  <Button className="bg-green-500 hover:bg-green-600" onClick={() => setShowAddPatientForm(true)}>
+                    Add Patient
+                  </Button>
+                </div>
+                <div className="grid gap-4">
+                  {filteredPatients.length === 0 && (
+                    <div className="text-center text-zinc-400">No patients found.</div>
+                  )}
+                  {filteredPatients.map((patient, idx) => (
+                    <Card key={idx} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300">
+                      <CardContent className="p-6 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div>
+                          <h3 className="font-semibold text-zinc-100">{patient.firstName} {patient.lastName}</h3>
+                          <p className="text-sm text-zinc-400">{patient.gender}, {patient.dateOfBirth}</p>
+                          <p className="text-xs text-zinc-400">{patient.phone} | {patient.email}</p>
+                          <p className="text-xs text-zinc-400">{patient.address}</p>
+                        </div>
+                        <div className="flex space-x-2 mt-4 md:mt-0">
+                          <Button variant="outline" size="sm" onClick={() => handleViewPatient(patient)}>View</Button>
+                          <Button variant="outline" size="sm" onClick={() => handleEditPatient(patient)}>Edit</Button>
+                          <Button variant="outline" size="sm" onClick={() => handleDeletePatient(patient)}>Delete</Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                {showAddPatientForm && (
+                  <AddPatientForm
+                    onClose={() => setShowAddPatientForm(false)}
+                    onSubmit={handleAddPatient}
+                  />
+                )}
+                {showViewPatientForm && selectedPatient && (
+                  <ViewPatientForm
+                    onClose={() => setShowViewPatientForm(false)}
+                    patient={selectedPatient}
+                  />
+                )}
+                {showEditPatientForm && selectedPatient && (
+                  <EditPatientForm
+                    onClose={() => setShowEditPatientForm(false)}
+                    onSubmit={handleUpdatePatient}
+                    patient={selectedPatient}
+                  />
+                )}
+              </div>
+            )}
+
+            {activeTab === "settings" && (
+              <div className="space-y-6">
+                <Card className="bg-zinc-800/50 border-zinc-700">
+                  <CardHeader>
+                    <CardTitle className="text-zinc-100">Current Hospital Settings</CardTitle>
+                    <CardDescription className="text-zinc-400">Summary of current configuration</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div><strong>Two-Factor Auth:</strong> {hospitalSettings.twoFactorAuth ? "Enabled" : "Disabled"}</div>
+                      <div><strong>Session Timeout:</strong> {hospitalSettings.sessionTimeout} hours</div>
+                      <div><strong>Auto Backup:</strong> {hospitalSettings.autoBackup ? "Enabled" : "Disabled"}</div>
+                      <div><strong>Data Retention:</strong> {hospitalSettings.dataRetention === "0" ? "Indefinite" : hospitalSettings.dataRetention + " days"}</div>
+                      <div><strong>Notifications:</strong> {hospitalSettings.notifications ? "Enabled" : "Disabled"}</div>
+                      <div><strong>Maintenance Mode:</strong> {hospitalSettings.maintenanceMode ? "On" : "Off"}</div>
+                      <div><strong>Language:</strong> {hospitalSettings.language}</div>
+                      <div><strong>Timezone:</strong> {hospitalSettings.timezone}</div>
+                    </div>
+                    <div className="flex justify-end mt-6">
+                      <Button className="bg-blue-500 hover:bg-blue-600" onClick={() => setShowSettingsForm(true)}>
+                        Edit Settings
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+                {showSettingsForm && (
+                  <HospitalAdminSettingsForm
+                    onClose={() => setShowSettingsForm(false)}
+                    onSubmit={handleSaveSettings}
+                    initialSettings={hospitalSettings}
+                  />
+                )}
+              </div>
+            )}
           </div>
         </div>
-              </main>
-      </div>
-    </ProtectedRoute>
-  )
+      </main>
+
+      {/* Form Modals */}
+      {showAddDoctorForm && (
+        <AddDoctorForm
+          onClose={() => setShowAddDoctorForm(false)}
+          onSubmit={handleAddDoctor}
+        />
+      )}
+
+      {showViewDoctorForm && selectedDoctor && (
+        <ViewDoctorForm
+          onClose={() => setShowViewDoctorForm(false)}
+          doctor={selectedDoctor}
+        />
+      )}
+
+      {showEditDoctorForm && selectedDoctor && (
+        <EditDoctorForm
+          onClose={() => setShowEditDoctorForm(false)}
+          onSubmit={handleUpdateDoctor}
+          doctor={selectedDoctor}
+        />
+      )}
+    </div>
+  </ProtectedRoute>
+)
 } 
