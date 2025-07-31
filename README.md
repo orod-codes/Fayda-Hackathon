@@ -6,7 +6,7 @@
 
 - **Dorsis Girma** Email: Girmadorsis@gmail.com
 - **Hiba Khalid** Email: khalidhiba42@gmail.com
-- **Sebrina Semir**
+- **Sebrina Semir** Email: sebrinasemir2445@gmail.com
 
 ---
 
