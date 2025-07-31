@@ -11,7 +11,7 @@ import {
 export type UserRole = "patient" | "doctor" | "hospital-admin" | "super-admin";
 
 interface User {
-	id: string;
+	sub: string;
 	name: string;
 	email: string;
 	role: UserRole;
