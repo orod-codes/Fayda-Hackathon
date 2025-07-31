@@ -131,14 +131,19 @@ This project is fully containerized, allowing for a simple, one-command setup.
     *   **Session Secret (`SESSION_SECRET`):**
         *   This is a secret you create. Generate a long, random, and unpredictable string (at least 32 characters) and paste it here. You can use a password generator for this.
 
-3.  **Launch with Docker Compose:**
+3.  **Launch with Docker Compose or npm:**
     From the root directory of the project, run the following command:
     ```bash
     docker-compose up --build
     ```
     This command will build the images for both the frontend and backend services and start the application.
+    Alternatively use 
+    ```bash
+    npm install
+    npm run dev
+    ```
 
-4.  **Access the Application:**
+5.  **Access the Application:**
     * The frontend will be available at [http://localhost:3000](http://localhost:3000).
     * The backend API will be running on `http://localhost:3001`.
     * A health check endpoint is available at `http://localhost:3001/api/health`.
