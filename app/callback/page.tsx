@@ -1,117 +1,86 @@
-"use client"
+import { importJWK, decodeJwt, SignJWT } from "jose";
+import axios, { isAxiosError } from "axios";
 
-import { useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, CheckCircle, XCircle } from "lucide-react"
+const decodeUserInfoResponse = async (userinfoJwtToken: string) => {
+  try {
+    return decodeJwt(userinfoJwtToken);
+  } catch (error) {
+    console.error("Error decoding JWT user info:", error);
+    return null;
+  }
+};
 
-export default function CallbackPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
-  const [error, setError] = useState('')
+export const generateSignedJwt = async () => {
+  const { CLIENT_ID, TOKEN_ENDPOINT, PRIVATE_KEY } = process.env;
 
-  useEffect(() => {
-    const handleCallback = async () => {
-      try {
-        const code = searchParams.get('code')
-        const state = searchParams.get('state')
-        const error = searchParams.get('error')
+  const header = { alg: "RS256", typ: "JWT" };
 
-        if (error) {
-          setStatus('error')
-          setError(`Authentication failed: ${error}`)
-          return
-        }
+  const payload = {
+    iss: CLIENT_ID,
+    sub: CLIENT_ID,
+    aud: TOKEN_ENDPOINT,
+  };
 
-        if (!code || !state) {
-          setStatus('error')
-          setError('Missing authorization code or state parameter')
-          return
-        }
+  const jwkJson = Buffer.from(PRIVATE_KEY!, "base64").toString();
+  const jwk = JSON.parse(jwkJson);
+  const privateKey = await importJWK(jwk, "RS256");
 
-        // Exchange code for tokens
-        const tokenResponse = await fetch('http://localhost:3001/api/auth/token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            authorization_code: code,
-            state: state
-          })
-        })
+  return await new SignJWT(payload)
+    .setProtectedHeader(header)
+    .setIssuedAt()
+    .setExpirationTime("2h")
+    .sign(privateKey);
+};
 
-        const tokenData = await tokenResponse.json()
+const page = async ({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) => {
+  const code = searchParams.code;
+  if (!code || Array.isArray(code)) {
+    return <div>Invalid code</div>;
+  }
+  try {
+    const jwt = await generateSignedJwt();
 
-        if (!tokenResponse.ok) {
-          setStatus('error')
-          setError(tokenData.error || 'Token exchange failed')
-          return
-        }
+    const params = new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      client_id: process.env.CLIENT_ID!,
+      redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI!,
+      client_assertion_type: process.env.CLIENT_ASSERTION_TYPE!,
+      client_assertion: jwt,
+      code_verifier: "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+    });
 
-        if (tokenData.success) {
-          setStatus('success')
-          setTimeout(() => {
-            router.push('/patient')
-          }, 2000)
-        } else {
-          setStatus('error')
-          setError('Authentication failed')
-        }
-      } catch (err) {
-        console.error('Callback error:', err)
-        setStatus('error')
-        setError('An unexpected error occurred')
-      }
-    }
+    const response = await axios.post(
+      process.env.TOKEN_ENDPOINT!,
+      params.toString(),
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
+    );
 
-    handleCallback()
-  }, [searchParams, router])
+    const accessToken = response.data.access_token;
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-zinc-100 p-4">
-      <Card className="w-full max-w-md bg-zinc-800/50 backdrop-blur-sm border-zinc-700">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-zinc-100">
-            {status === 'loading' && 'Authenticating...'}
-            {status === 'success' && 'Authentication Successful!'}
-            {status === 'error' && 'Authentication Failed'}
-          </CardTitle>
-          <CardDescription className="text-zinc-400">
-            {status === 'loading' && 'Please wait while we verify your Fayda credentials.'}
-            {status === 'success' && 'Redirecting you to your dashboard...'}
-            {status === 'error' && 'There was an issue with your authentication.'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="text-center">
-          {status === 'loading' && (
-            <div className="flex justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            </div>
-          )}
-          {status === 'success' && (
-            <div className="flex flex-col items-center space-y-4">
-              <CheckCircle className="h-16 w-16 text-green-500" />
-              <p className="text-zinc-300">Welcome to Hakim AI!</p>
-            </div>
-          )}
-          {status === 'error' && (
-            <div className="flex flex-col items-center space-y-4">
-              <XCircle className="h-16 w-16 text-red-500" />
-              <p className="text-zinc-300 text-sm">{error}</p>
-              <Button 
-                onClick={() => router.push('/')} 
-                className="bg-blue-500 hover:bg-blue-600"
-              >
-                Try Again
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
+    const userInfoResponse = await axios.get(process.env.USERINFO_ENDPOINT!, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    const decodedUserInfo = await decodeUserInfoResponse(userInfoResponse.data);
+    console.log("Decoded user info:", decodedUserInfo);
+
+    return (
+      <div>
+        <h1>Success</h1>
+        <p>Access token: {accessToken}</p>
+        {JSON.stringify(decodedUserInfo, null, 2)}
+      </div>
+    );
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log(error.response?.data);
+    } else console.log(error);
+  }
+};
+
+export default page;
