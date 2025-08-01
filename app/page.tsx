@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button"
 import { useLanguage, type Language } from "@/contexts/LanguageContext"
 import { useRouter } from "next/navigation"
+import { ThemeToggle } from "@/components/ThemeToggle"
+import { Footer } from "@/components/Footer"
 import { MessageSquare, Settings, User, Stethoscope, Building, Shield } from "lucide-react"
 import Image from "next/image"
 
@@ -50,30 +52,31 @@ export default function HomePage() {
   ]
 
     return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-zinc-100 flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background text-foreground flex flex-col relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,165,233,0.1),transparent_50%)]"></div>
-      <div className="absolute top-0 left-0 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
       
-      <header className="border-b border-zinc-800/50 backdrop-blur-sm px-6 py-6 relative z-10">
+      <header className="border-b border-border/50 backdrop-blur-sm px-6 py-6 relative z-10">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-sky-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg">
                 <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={24} height={24} className="w-6 h-6" />
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
               Hakim AI 
             </span>
           </div>
-          <div className="relative">
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as Language)}
-              className="bg-zinc-800/80 backdrop-blur-sm border border-zinc-700/50 text-zinc-100 rounded-xl px-4 py-2 focus:border-sky-400 focus:outline-none transition-all duration-300"
+              className="bg-background/80 backdrop-blur-sm border border-border/50 text-foreground rounded-xl px-4 py-2 focus:border-primary focus:outline-none transition-all duration-300"
             >
               {languages.map((lang) => (
                 <option key={lang.code} value={lang.code}>
@@ -91,10 +94,10 @@ export default function HomePage() {
             <div className="flex items-center justify-center mx-auto mb-8">
               <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={2000} height={200} className="w-480 h-480" />
             </div>
-            <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
               {translations.welcome}
             </h1>
-            <p className="text-zinc-300 text-xl max-w-xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground text-xl max-w-xl mx-auto leading-relaxed">
               {translations.healthAssistant}
             </p>
           </div>
@@ -104,30 +107,30 @@ export default function HomePage() {
               {userRoles.map((role) => (
                 <div
                   key={role.id}
-                  className="group relative bg-zinc-800/40 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-6 hover:bg-zinc-800/60 hover:border-sky-500/50 transition-all duration-500 cursor-pointer transform hover:scale-105 hover:shadow-2xl"
+                  className="group relative bg-card/40 backdrop-blur-sm border border-border/50 rounded-2xl p-6 hover:bg-card/60 hover:border-primary/50 transition-all duration-500 cursor-pointer transform hover:scale-105 hover:shadow-2xl"
                   onClick={role.onClick || (() => router.push(role.route))}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-sky-500/10 to-blue-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="relative flex items-center space-x-4">
                     <div className={`relative w-16 h-16 ${role.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-110`}>
                       <role.icon className="h-8 w-8 text-white" />
                       <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                     <div className="flex-1 text-left">
-                      <h3 className="text-2xl font-bold text-zinc-100 mb-2 group-hover:text-sky-300 transition-colors duration-300">
+                      <h3 className="text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
                         {role.title}
                       </h3>
-                      <p className="text-zinc-300 text-base leading-relaxed mb-3">
+                      <p className="text-muted-foreground text-base leading-relaxed mb-3">
                         {role.description}
                       </p>
                       {role.requiresFayda && (
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-500 to-sky-500 text-white shadow-lg">
-                          <div className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></div>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg">
+                          <div className="w-2 h-2 bg-primary-foreground rounded-full mr-2 animate-pulse"></div>
                           Fayda ID Required
                         </span>
                       )}
                     </div>
-                    <div className="text-zinc-500 group-hover:text-sky-400 transition-colors duration-300">
+                    <div className="text-muted-foreground group-hover:text-primary transition-colors duration-300">
                       <svg className="w-6 h-6 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
@@ -138,17 +141,19 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="bg-zinc-800/30 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-6 max-w-lg mx-auto">
+          <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-2xl p-6 max-w-lg mx-auto">
             <div className="flex items-center space-x-3 mb-3">
               <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-              <p className="text-zinc-300 font-medium">Important Notice</p>
+              <p className="text-foreground font-medium">Important Notice</p>
             </div>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               For medical emergencies, please contact emergency services immediately. This system provides health assistance and should not replace professional medical care.
             </p>
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   )
 }

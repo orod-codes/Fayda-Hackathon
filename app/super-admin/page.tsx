@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useTheme } from "@/contexts/ThemeContext"
 import { useAuth } from "@/contexts/AuthContext"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import { useRouter } from "next/navigation"
 import ProtectedRoute from "@/components/ProtectedRoute"
 import AddHospitalForm from "@/components/AddHospitalForm"
@@ -177,6 +178,7 @@ export default function SuperAdminPage() {
             <span className="text-xl font-semibold text-red-400">Super Admin Dashboard</span>
           </div>
           <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <Button variant="ghost" size="sm">
               <AlertTriangle className="h-4 w-4" />
             </Button>
@@ -308,7 +310,7 @@ export default function SuperAdminPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-zinc-300">Security Alerts</span>
-                        <Badge className="bg-yellow-500 text-white">{systemStats.securityAlerts} Active</Badge>
+                        <Badge className="bg-blue-500 text-white">{systemStats.securityAlerts} Active</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-zinc-300">Last Backup</span>
@@ -366,7 +368,7 @@ export default function SuperAdminPage() {
                         <div key={activity.id} className="flex items-center space-x-4 p-3 rounded-lg bg-zinc-700/50">
                           <div className={`w-2 h-2 rounded-full ${
                             activity.type === 'emergency' ? 'bg-red-500' :
-                            activity.type === 'warning' ? 'bg-yellow-500' :
+                            activity.type === 'warning' ? 'bg-blue-500' :
                             activity.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
                           }`} />
                           <div className="flex-1">
@@ -432,7 +434,7 @@ export default function SuperAdminPage() {
                           </div>
                           <div className="flex items-center space-x-3">
                             <Badge className={
-                              hospital.status === 'active' ? 'bg-green-500 text-white' : 'bg-yellow-500 text-white'
+                              hospital.status === 'active' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
                             }>
                               {hospital.status}
                             </Badge>

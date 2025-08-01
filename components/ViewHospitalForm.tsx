@@ -77,7 +77,7 @@ export default function ViewHospitalForm({ onClose, hospital }: ViewHospitalForm
                     Status
                   </p>
                   <Badge className={
-                    hospital.status === 'active' ? 'bg-green-500 text-white' : 'bg-yellow-500 text-white'
+                    hospital.status === 'active' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
                   }>
                     {hospital.status}
                   </Badge>

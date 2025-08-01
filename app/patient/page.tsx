@@ -256,7 +256,7 @@ export default function PatientPage() {
 												</div>
 											</div>
 											<Button
-												onClick={() => router.push("/chat")}
+												onClick={() => router.push("/patient/login")}
 												className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-3"
 											>
 												<MessageSquare className="h-4 w-4 mr-2" />
@@ -328,7 +328,7 @@ export default function PatientPage() {
 								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 									<Card
 										className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer"
-										onClick={() => router.push("/chat")}
+										onClick={() => router.push("/patient/login")}
 									>
 										<CardContent className="p-6 text-center">
 											<MessageSquare className="h-8 w-8 text-sky-400 mx-auto mb-3" />

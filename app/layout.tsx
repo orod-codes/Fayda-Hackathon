@@ -25,16 +25,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={jetbrainsMono.variable}>
-      <body className={jetbrainsMono.className}>
-        <AuthProvider>
-          <ThemeProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={jetbrainsMono.variable}>
+        <ThemeProvider>
+          <AuthProvider>
             <LanguageProvider>
               {children}
               <Toaster />
             </LanguageProvider>
-          </ThemeProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

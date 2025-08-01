@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useTheme } from "@/contexts/ThemeContext"
 import { useAuth } from "@/contexts/AuthContext"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Shield, Mail, Lock, Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
@@ -43,16 +44,19 @@ export default function SuperAdminLoginPage() {
         : 'bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 text-zinc-900'
     }`}>
       <div className="w-full max-w-md">
-        <Button 
-          variant="ghost" 
-          onClick={() => router.push("/")} 
-          className={`mb-6 ${
-            theme === 'dark' ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-900'
-          }`}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
-        </Button>
+        <div className="flex items-center justify-between mb-6">
+          <Button 
+            variant="ghost" 
+            onClick={() => router.push("/")} 
+            className={`${
+              theme === 'dark' ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-900'
+            }`}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          <ThemeToggle />
+        </div>
 
         <Card className={`${
           theme === 'dark' 

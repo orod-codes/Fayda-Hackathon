@@ -207,18 +207,18 @@ export default function SystemBackupForm({ onClose, onSubmit }: SystemBackupForm
             </div>
 
             <div className={`p-4 rounded-lg ${
-              theme === 'dark' ? 'bg-yellow-500/10 border border-yellow-500/20' : 'bg-yellow-50 border border-yellow-200'
+              theme === 'dark' ? 'bg-blue-500/10 border border-blue-500/20' : 'bg-blue-50 border border-blue-200'
             }`}>
               <div className="flex items-start space-x-3">
                 <AlertTriangle className={`h-5 w-5 mt-0.5 ${
-                  theme === 'dark' ? 'text-yellow-400' : 'text-yellow-600'
+                  theme === 'dark' ? 'text-blue-400' : 'text-blue-600'
                 }`} />
                 <div>
                   <h4 className={`font-medium ${
-                    theme === 'dark' ? 'text-yellow-100' : 'text-yellow-800'
+                    theme === 'dark' ? 'text-blue-100' : 'text-blue-800'
                   }`}>Backup Warning</h4>
                   <p className={`text-sm mt-1 ${
-                    theme === 'dark' ? 'text-yellow-300' : 'text-yellow-700'
+                    theme === 'dark' ? 'text-blue-300' : 'text-blue-700'
                   }`}>
                     This operation may take several minutes depending on the data size. 
                     The system will remain operational during backup.

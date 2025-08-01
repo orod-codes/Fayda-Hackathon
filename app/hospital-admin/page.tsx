@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useTheme } from "@/contexts/ThemeContext"
 import { useAuth } from "@/contexts/AuthContext"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import { useRouter } from "next/navigation"
 import ProtectedRoute from "@/components/ProtectedRoute"
 import AddDoctorForm from "@/components/AddDoctorForm"
@@ -259,6 +260,7 @@ export default function HospitalAdminPage() {
             <span className="text-xl font-semibold text-sky-400">Hospital Admin Dashboard</span>
           </div>
           <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <Button variant="ghost" size="sm">
               <Settings className="h-4 w-4" />
             </Button>
