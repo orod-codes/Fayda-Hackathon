@@ -108,7 +108,7 @@ export default function PatientLoginPage() {
                   theme === 'dark' ? 'shadow-lg' : 'shadow-md'
                 }`}
               >
-                <Image src="/images/hakmin-logo.png" alt="Hakmin Logo" width={24} height={24} />
+                <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={24} height={24} />
               </div>
               <div>
                 <CardTitle className={`text-2xl ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>

@@ -60,8 +60,8 @@ export default function DashboardPage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Button>
-            <Image src="/images/hakmin-logo.png" alt="Hakmin Logo" width={32} height={32} />
-            <span className="text-xl font-semibold text-sky-400">Hakmin Dashboard</span>
+            <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={32} height={32} />
+            <span className="text-xl font-semibold text-sky-400">hakim-ai Dashboard</span>
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="sm">

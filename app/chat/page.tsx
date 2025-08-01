@@ -43,7 +43,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hello! I'm Hakmin, your AI health assistant. How can I help you today?",
+      content: "Hello! I'm hakim-ai, your AI health assistant. How can I help you today?",
       role: 'assistant',
       timestamp: new Date(),
     },
@@ -167,7 +167,7 @@ export default function ChatPage() {
                     theme === 'dark' ? 'shadow-lg' : 'shadow-md'
                   }`}
                 >
-                  <Image src="/images/hakmin-logo.png" alt="Hakmin Logo" width={24} height={24} />
+                  <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={24} height={24} />
                 </div>
                 <span className={`text-xl font-bold ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
                   Health Chat
@@ -227,7 +227,7 @@ export default function ChatPage() {
                     </Avatar>
                     <div>
                       <CardTitle className={`text-lg ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
-                        Hakmin AI Assistant
+                        hakim-ai AI Assistant
                       </CardTitle>
                       <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`}>
                         Your AI health companion powered by ChatGPT

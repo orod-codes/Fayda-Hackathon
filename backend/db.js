@@ -44,7 +44,7 @@ const db = {
       hospital: "Tikur Anbessa Hospital",
       personalData: {
         name: "Dr. Abebe Kebede",
-        email: "doctor@hakmin.et"
+        email: "doctor@hakim-ai.et"
       }
     },
     "ADMIN_DEMO_001": {

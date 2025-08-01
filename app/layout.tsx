@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Hakmin - AI Health Assistant for Ethiopia",
+  title: "hakim-ai - AI Health Assistant for Ethiopia",
   description: "Your multilingual AI health assistant supporting English, Amharic, and Afaan Oromo",
    
 }

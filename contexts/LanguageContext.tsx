@@ -13,7 +13,7 @@ interface LanguageContextType {
 
 const translations = {
   en: {
-    welcome: "Welcome to Hakmin",
+    welcome: "Welcome to Hakim AI ",
     welcomeSubtitle: "Your AI Health Assistant for Ethiopia",
     healthAssistant: "Your AI Health Assistant",
     selectLanguage: "Select Your Language",
@@ -26,7 +26,7 @@ const translations = {
     healthTips: "Health Tips",
     emergencyContacts: "Emergency Contacts",
     symptoms: "Describe your symptoms",
-    askDoctor: "Ask Hakmin about your health",
+    askDoctor: "Ask hakim-ai about your health",
     adminDashboard: "Admin Dashboard",
     userChat: "Health Chat",
     newChat: "New Chat",
@@ -57,7 +57,7 @@ const translations = {
     disclaimer: "ይህ ለመረጃ ዓላማ ብቻ ነው። ሁልጊዜ ለሕክምና ምክር የጤና ባለሙያዎችን ያማክሩ።",
   },
   or: {
-    welcome: "Gara Hakmin Baga Nagaan Dhuftan",
+    welcome: "Gara hakim-ai Baga Nagaan Dhuftan",
     welcomeSubtitle: "Gorsaa Fayyaa AI Itiyoophiyaa Keessan",
     healthAssistant: "Gorsaa Fayyaa AI Keessan",
     selectLanguage: "Afaan Keessan Filaadhaa",
@@ -70,7 +70,7 @@ const translations = {
     healthTips: "Gorsa Fayyaa",
     emergencyContacts: "Bilbila Yeroo Balaa",
     symptoms: "Mallattoo keessan ibsaa",
-    askDoctor: "Waaʼee fayyaa keessanii Hakmin gaafadhaa",
+    askDoctor: "Waaʼee fayyaa keessanii hakim-ai gaafadhaa",
     adminDashboard: "Dashboard Bulchaa",
     userChat: "Haasawa Fayyaa",
     newChat: "Haasawa Haaraa",

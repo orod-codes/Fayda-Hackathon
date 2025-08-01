@@ -61,12 +61,12 @@ export default function HomePage() {
           <div className="flex items-center space-x-4">
             <div className="relative">
               <div className="w-10 h-10 bg-gradient-to-br from-sky-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Image src="/images/hakmin-logo.png" alt="Hakmin Logo" width={24} height={24} className="w-6 h-6" />
+                <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={24} height={24} className="w-6 h-6" />
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent">
-              Hakmin Health
+              Hakim AI 
             </span>
           </div>
           <div className="relative">
@@ -89,7 +89,7 @@ export default function HomePage() {
         <div className="max-w-2xl w-full text-center">
           <div className="mb-12">
             <div className="flex items-center justify-center mx-auto mb-8">
-              <Image src="/images/hakmin-logo.png" alt="Hakmin Logo" width={2000} height={200} className="w-480 h-480" />
+              <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={2000} height={200} className="w-480 h-480" />
             </div>
             <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
               {translations.welcome}

@@ -112,8 +112,8 @@ export default function PatientPage() {
 							Back
 						</Button>
 						<Image
-							src="/images/hakmin-logo.png"
-							alt="Hakmin Logo"
+							src="/images/hakim-ai-logo.png"
+							alt="hakim-ai Logo"
 							width={32}
 							height={32}
 						/>
@@ -154,11 +154,13 @@ export default function PatientPage() {
 							<CardContent className="p-6">
 								<div className="space-y-4">
 									<div className="flex items-center space-x-3">
+										<div>
 										<Avatar>
 											<AvatarFallback className="bg-blue-500 text-white">
-												P
+											<img src={user?.picture} alt="" />
 											</AvatarFallback>
 										</Avatar>
+										</div>
 										<div>
 											<p className="font-medium text-zinc-100">{user?.name}</p>
 											<p className="text-sm text-zinc-400">{user?.email}</p>

@@ -157,7 +157,7 @@ export default function DoctorLoginPage() {
               <div className={`${
                 theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
               }`}>
-                <strong>Email:</strong> doctor@hakmin.et
+                <strong>Email:</strong> doctor@hakim-ai.et
               </div>
               <div className={`${
                 theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'

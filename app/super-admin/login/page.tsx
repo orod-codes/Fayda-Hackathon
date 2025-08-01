@@ -156,7 +156,7 @@ export default function SuperAdminLoginPage() {
               <div className={`${
                 theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
               }`}>
-                <strong>Email:</strong> superadmin@hakmin.gov.et
+                <strong>Email:</strong> superadmin@hakim-ai.gov.et
               </div>
               <div className={`${
                 theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
