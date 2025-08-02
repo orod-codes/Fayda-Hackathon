@@ -46,7 +46,7 @@ export default function DoctorViewPatientForm({ onClose, patient }: DoctorViewPa
             <div><strong>Age:</strong> {patient.age}</div>
             <div><strong>Gender:</strong> {patient.gender}</div>
             <div><strong>Blood Type:</strong> {patient.bloodType}</div>
-            <div><strong>Status:</strong> <Badge className={patient.status === 'emergency' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}>{patient.status}</Badge></div>
+                            <div><strong>Status:</strong> <Badge className={patient.status === 'emergency' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}>{patient.status}</Badge></div>
             <div><strong>Last Visit:</strong> {patient.lastVisit}</div>
             <div><strong>Emergency Contact:</strong> {patient.emergencyContact}</div>
             <div className="md:col-span-2"><strong>Allergies:</strong> {patient.allergies.join(', ')}</div>

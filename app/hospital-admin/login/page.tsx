@@ -135,7 +135,7 @@ export default function HospitalAdminLoginPage() {
             <Button
               onClick={handleLogin}
               disabled={isLoading || !email || !password}
-              className="w-full bg-purple-500 hover:bg-purple-600 text-white"
+                              className="w-full bg-blue-500 hover:bg-blue-600 text-white"
             >
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>

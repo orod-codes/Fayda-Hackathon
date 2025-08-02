@@ -285,7 +285,7 @@ export default function SecurityAuditForm({ onClose, onSubmit }: SecurityAuditFo
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading} className="bg-orange-500 hover:bg-orange-600">
+              <Button type="submit" disabled={isLoading} className="bg-blue-500 hover:bg-blue-600">
                 {isLoading ? "Running Audit..." : "Start Security Audit"}
               </Button>
             </div>

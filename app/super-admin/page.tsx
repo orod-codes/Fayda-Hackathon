@@ -41,6 +41,8 @@ export default function SuperAdminPage() {
   const [showViewHospitalForm, setShowViewHospitalForm] = useState(false)
   const [showEditHospitalForm, setShowEditHospitalForm] = useState(false)
   const [showHospitalSettingsForm, setShowHospitalSettingsForm] = useState(false)
+  const [showAddHospitalAdminForm, setShowAddHospitalAdminForm] = useState(false)
+  const [selectedHospitalForAdmin, setSelectedHospitalForAdmin] = useState<any>(null)
 
   const handleLogout = () => {
     logout()
@@ -90,6 +92,17 @@ export default function SuperAdminPage() {
   const handleHospitalSettingsUpdate = (settingsData: any) => {
     console.log("Updating hospital settings:", settingsData)
     alert("Hospital settings updated successfully!")
+  }
+
+  const handleAddHospitalAdmin = (hospital: any) => {
+    setSelectedHospitalForAdmin(hospital)
+    setShowAddHospitalAdminForm(true)
+  }
+
+  const handleCreateHospitalAdmin = (adminData: any) => {
+    console.log("Creating hospital admin:", adminData)
+    console.log("For hospital:", selectedHospitalForAdmin)
+    alert("Hospital admin created successfully!")
   }
 
   const hospitals = [
@@ -197,7 +210,7 @@ export default function SuperAdminPage() {
                 <div className="flex items-center space-x-3 mb-6">
                   <Avatar className="w-12 h-12">
                     <AvatarImage src="/placeholder-user.jpg" />
-                    <AvatarFallback className="bg-red-500 text-white">SA</AvatarFallback>
+                    <AvatarFallback className="bg-blue-500 text-white">SA</AvatarFallback>
                   </Avatar>
                   <div>
                     <h3 className="font-semibold text-zinc-100">Super Admin</h3>
@@ -302,11 +315,11 @@ export default function SuperAdminPage() {
                     <CardContent className="space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-zinc-300">Database Status</span>
-                        <Badge className="bg-green-500 text-white">Healthy</Badge>
+                                                    <Badge className="bg-blue-500 text-white">Healthy</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-zinc-300">API Services</span>
-                        <Badge className="bg-green-500 text-white">All Online</Badge>
+                                                    <Badge className="bg-blue-500 text-white">All Online</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-zinc-300">Security Alerts</span>
@@ -330,24 +343,24 @@ export default function SuperAdminPage() {
                         onClick={() => setShowAddHospitalForm(true)}
                       >
                         <Plus className="h-4 w-4 mr-2" />
-                        Add New Hospital
+                        Add Hospital with Admin
                       </Button>
                       <Button 
-                        className="w-full bg-green-500 hover:bg-green-600"
+                        className="w-full bg-blue-500 hover:bg-blue-600"
                         onClick={() => setShowCreateAdminForm(true)}
                       >
                         <UserPlus className="h-4 w-4 mr-2" />
                         Create Admin Account
                       </Button>
                       <Button 
-                        className="w-full bg-purple-500 hover:bg-purple-600"
+                        className="w-full bg-blue-500 hover:bg-blue-600"
                         onClick={() => setShowSystemBackupForm(true)}
                       >
                         <Database className="h-4 w-4 mr-2" />
                         System Backup
                       </Button>
                       <Button 
-                        className="w-full bg-orange-500 hover:bg-orange-600"
+                        className="w-full bg-blue-500 hover:bg-blue-600"
                         onClick={() => setShowSecurityAuditForm(true)}
                       >
                         <Monitor className="h-4 w-4 mr-2" />
@@ -369,7 +382,7 @@ export default function SuperAdminPage() {
                           <div className={`w-2 h-2 rounded-full ${
                             activity.type === 'emergency' ? 'bg-red-500' :
                             activity.type === 'warning' ? 'bg-blue-500' :
-                            activity.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+                            activity.type === 'success' ? 'bg-blue-500' : 'bg-blue-400'
                           }`} />
                           <div className="flex-1">
                             <p className="text-zinc-100 font-medium">{activity.action}</p>
@@ -405,11 +418,11 @@ export default function SuperAdminPage() {
                     </Button>
                   </div>
                   <Button 
-                    className="bg-green-500 hover:bg-green-600"
+                    className="bg-blue-500 hover:bg-blue-600"
                     onClick={() => setShowAddHospitalForm(true)}
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Hospital
+                    Add Hospital with Admin
                   </Button>
                 </div>
 
@@ -434,7 +447,7 @@ export default function SuperAdminPage() {
                           </div>
                           <div className="flex items-center space-x-3">
                             <Badge className={
-                              hospital.status === 'active' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
+                              hospital.status === 'active' ? 'bg-blue-500 text-white' : 'bg-blue-400 text-white'
                             }>
                               {hospital.status}
                             </Badge>
@@ -462,6 +475,14 @@ export default function SuperAdminPage() {
                                 onClick={() => handleHospitalSettings(hospital)}
                               >
                                 <Settings className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="border-green-600 text-green-300 hover:bg-green-700"
+                                onClick={() => handleAddHospitalAdmin(hospital)}
+                              >
+                                <UserPlus className="h-4 w-4" />
                               </Button>
                             </div>
                           </div>
@@ -496,7 +517,7 @@ export default function SuperAdminPage() {
                           </div>
                         </CardContent>
                       </Card>
-                      <Card className="bg-green-500/10 border-green-500/20">
+                      <Card className="bg-blue-500/10 border-blue-500/20">
                         <CardContent className="p-4">
                           <div className="flex items-center space-x-3">
                             <Shield className="h-6 w-6 text-green-400" />
@@ -531,7 +552,7 @@ export default function SuperAdminPage() {
                         Run Security Audit
                       </Button>
                       <Button 
-                        className="w-full bg-green-500 hover:bg-green-600"
+                        className="w-full bg-blue-500 hover:bg-blue-600"
                         onClick={() => {
                           alert("Backing up security keys to secure location...")
                         }}
@@ -573,7 +594,7 @@ export default function SuperAdminPage() {
                           </div>
                           <div className="flex items-center justify-between">
                             <span className="text-zinc-300">Auto Backup</span>
-                            <Badge className="bg-green-500 text-white">Enabled</Badge>
+                            <Badge className="bg-blue-500 text-white">Enabled</Badge>
                           </div>
                         </div>
                       </div>
@@ -582,7 +603,7 @@ export default function SuperAdminPage() {
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <span className="text-zinc-300">Two-Factor Auth</span>
-                            <Badge className="bg-green-500 text-white">Required</Badge>
+                            <Badge className="bg-blue-500 text-white">Required</Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className="text-zinc-300">Session Timeout</span>
@@ -607,7 +628,7 @@ export default function SuperAdminPage() {
                         Backup System
                       </Button>
                       <Button 
-                        className="w-full bg-green-500 hover:bg-green-600"
+                        className="w-full bg-blue-500 hover:bg-blue-600"
                         onClick={() => {
                           alert("Checking for system updates...")
                         }}
@@ -616,7 +637,7 @@ export default function SuperAdminPage() {
                         Update System
                       </Button>
                       <Button 
-                        className="w-full bg-orange-500 hover:bg-orange-600"
+                        className="w-full bg-blue-500 hover:bg-blue-600"
                         onClick={() => {
                           alert("Opening advanced configuration panel...")
                         }}
@@ -682,6 +703,15 @@ export default function SuperAdminPage() {
           onClose={() => setShowHospitalSettingsForm(false)}
           onSubmit={handleHospitalSettingsUpdate}
           hospital={selectedHospital}
+        />
+      )}
+
+      {showAddHospitalAdminForm && selectedHospitalForAdmin && (
+        <CreateAdminForm
+          onClose={() => setShowAddHospitalAdminForm(false)}
+          onSubmit={handleCreateHospitalAdmin}
+          hospitalId={selectedHospitalForAdmin.id}
+          hospitalName={selectedHospitalForAdmin.name}
         />
       )}
     </div>

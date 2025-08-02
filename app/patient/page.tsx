@@ -133,7 +133,7 @@ export default function PatientPage() {
 			</header>
 
 			{/* Emergency Alert */}
-			<div className="bg-red-500/10 border-l-4 border-red-500 p-4">
+			                <div className="bg-blue-500/10 border-l-4 border-blue-500 p-4">
 				<div className="flex items-center">
 					<AlertTriangle className="h-5 w-5 text-red-400 mr-2" />
 					<div>

@@ -11,6 +11,8 @@ import { X, User, Mail, Lock, Building, Phone, Shield } from "lucide-react"
 interface CreateAdminFormProps {
   onClose: () => void
   onSubmit: (adminData: AdminData) => void
+  hospitalId?: string
+  hospitalName?: string
 }
 
 interface AdminData {
@@ -24,15 +26,15 @@ interface AdminData {
   confirmPassword: string
 }
 
-export default function CreateAdminForm({ onClose, onSubmit }: CreateAdminFormProps) {
+export default function CreateAdminForm({ onClose, onSubmit, hospitalId, hospitalName }: CreateAdminFormProps) {
   const { theme } = useTheme()
   const [formData, setFormData] = useState<AdminData>({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    role: "",
-    hospitalId: "",
+    role: hospitalId ? "hospital-admin" : "",
+    hospitalId: hospitalId || "",
     password: "",
     confirmPassword: ""
   })
@@ -65,15 +67,15 @@ export default function CreateAdminForm({ onClose, onSubmit }: CreateAdminFormPr
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card className={`w-full max-w-2xl ${
-        theme === 'dark' ? 'bg-zinc-800 border-zinc-700' : 'bg-white border-zinc-200'
+        theme === 'dark' ? 'bg-blue-900 border-blue-700' : 'bg-white border-zinc-200'
       }`}>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle className={theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}>
-              Create Admin Account
+              {hospitalName ? `Add Admin for ${hospitalName}` : 'Create Admin Account'}
             </CardTitle>
             <CardDescription className={theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}>
-              Create a new administrative account
+              {hospitalName ? `Create a new admin account for ${hospitalName}` : 'Create a new administrative account'}
             </CardDescription>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose}>
@@ -174,20 +176,27 @@ export default function CreateAdminForm({ onClose, onSubmit }: CreateAdminFormPr
                 <Label className={theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}>
                   Role *
                 </Label>
-                <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
-                  <SelectTrigger className={
-                    theme === 'dark' 
-                      ? 'bg-zinc-700 border-zinc-600 text-zinc-100' 
-                      : 'bg-white border-zinc-300 text-zinc-900'
-                  }>
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent className={theme === 'dark' ? 'bg-zinc-700 border-zinc-600' : 'bg-white border-zinc-300'}>
-                    <SelectItem value="hospital-admin">Hospital Admin</SelectItem>
-                    <SelectItem value="system-admin">System Admin</SelectItem>
-                    <SelectItem value="super-admin">Super Admin</SelectItem>
-                  </SelectContent>
-                </Select>
+                {hospitalId ? (
+                  <div className="flex items-center space-x-2 p-3 bg-zinc-700 border border-zinc-600 rounded-md">
+                    <Shield className="h-4 w-4 text-gray-400" />
+                    <span className="text-zinc-100">Hospital Admin</span>
+                  </div>
+                ) : (
+                  <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
+                    <SelectTrigger className={
+                      theme === 'dark' 
+                        ? 'bg-zinc-700 border-zinc-600 text-zinc-100' 
+                        : 'bg-white border-zinc-300 text-zinc-900'
+                    }>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent className={theme === 'dark' ? 'bg-zinc-700 border-zinc-600' : 'bg-white border-zinc-300'}>
+                      <SelectItem value="hospital-admin">Hospital Admin</SelectItem>
+                      <SelectItem value="system-admin">System Admin</SelectItem>
+                      <SelectItem value="super-admin">Super Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -196,20 +205,27 @@ export default function CreateAdminForm({ onClose, onSubmit }: CreateAdminFormPr
                 </Label>
                 <div className="relative">
                   <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Select value={formData.hospitalId} onValueChange={(value) => handleInputChange('hospitalId', value)}>
-                    <SelectTrigger className={`pl-10 ${
-                      theme === 'dark' 
-                        ? 'bg-zinc-700 border-zinc-600 text-zinc-100' 
-                        : 'bg-white border-zinc-300 text-zinc-900'
-                    }`}>
-                      <SelectValue placeholder="Select hospital" />
-                    </SelectTrigger>
-                    <SelectContent className={theme === 'dark' ? 'bg-zinc-700 border-zinc-600' : 'bg-white border-zinc-300'}>
-                      <SelectItem value="1">Tikur Anbessa Specialized Hospital</SelectItem>
-                      <SelectItem value="2">St. Paul's Hospital</SelectItem>
-                      <SelectItem value="3">Jimma University Medical Center</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {hospitalId ? (
+                    <div className="flex items-center space-x-2 p-3 bg-zinc-700 border border-zinc-600 rounded-md">
+                      <Building className="h-4 w-4 text-gray-400" />
+                      <span className="text-zinc-100">{hospitalName}</span>
+                    </div>
+                  ) : (
+                    <Select value={formData.hospitalId} onValueChange={(value) => handleInputChange('hospitalId', value)}>
+                      <SelectTrigger className={`pl-10 ${
+                        theme === 'dark' 
+                          ? 'bg-zinc-700 border-zinc-600 text-zinc-100' 
+                          : 'bg-white border-zinc-300 text-zinc-900'
+                      }`}>
+                        <SelectValue placeholder="Select hospital" />
+                      </SelectTrigger>
+                      <SelectContent className={theme === 'dark' ? 'bg-zinc-700 border-zinc-600' : 'bg-white border-zinc-300'}>
+                        <SelectItem value="1">Tikur Anbessa Specialized Hospital</SelectItem>
+                        <SelectItem value="2">St. Paul's Hospital</SelectItem>
+                        <SelectItem value="3">Jimma University Medical Center</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
                 </div>
               </div>
             </div>
@@ -280,7 +296,7 @@ export default function CreateAdminForm({ onClose, onSubmit }: CreateAdminFormPr
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading} className="bg-green-500 hover:bg-green-600">
+              <Button type="submit" disabled={isLoading} className="bg-blue-500 hover:bg-blue-600">
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </div>

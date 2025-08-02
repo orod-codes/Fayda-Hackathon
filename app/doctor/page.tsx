@@ -991,7 +991,7 @@ Prescription: ${consultation.prescription}`,
                   <Avatar className="w-12 h-12">
                     <AvatarImage src="/placeholder-user.jpg" />
                     <AvatarFallback className={`${
-                      theme === 'dark' ? 'bg-green-500' : 'bg-blue-500'
+                                                  theme === 'dark' ? 'bg-blue-500' : 'bg-blue-400'
                     } text-white`}>
                       {doctorProfile.firstName[0]}{doctorProfile.lastName[0]}
                     </AvatarFallback>
@@ -1199,7 +1199,7 @@ Prescription: ${consultation.prescription}`,
                         <Badge variant="secondary" className="ml-auto text-xs">45</Badge>
                       </Button>
                       <Button 
-                        className="w-full bg-green-500 hover:bg-green-600 transition-all duration-200 transform hover:scale-105" 
+                        className="w-full bg-blue-500 hover:bg-blue-600 transition-all duration-200 transform hover:scale-105" 
                         onClick={handleNewConsultationQuick}
                       >
                         <Stethoscope className="h-4 w-4 mr-2" />
@@ -1207,7 +1207,7 @@ Prescription: ${consultation.prescription}`,
                         <Badge variant="secondary" className="ml-auto text-xs">23</Badge>
                       </Button>
                       <Button 
-                        className="w-full bg-purple-500 hover:bg-purple-600 transition-all duration-200 transform hover:scale-105" 
+                        className="w-full bg-blue-500 hover:bg-blue-600 transition-all duration-200 transform hover:scale-105" 
                         onClick={handleAIDiagnosisHelp}
                       >
                         <Brain className="h-4 w-4 mr-2" />
@@ -1215,7 +1215,7 @@ Prescription: ${consultation.prescription}`,
                         <Badge variant="secondary" className="ml-auto text-xs">12</Badge>
                       </Button>
                       <Button 
-                        className="w-full bg-orange-500 hover:bg-orange-600 transition-all duration-200 transform hover:scale-105" 
+                        className="w-full bg-blue-500 hover:bg-blue-600 transition-all duration-200 transform hover:scale-105" 
                         onClick={handleDrugInteractionCheck}
                       >
                         <Pill className="h-4 w-4 mr-2" />
@@ -1257,13 +1257,13 @@ Prescription: ${consultation.prescription}`,
                         <span className={`${
                           theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
                         }`}>Specialization</span>
-                        <Badge className="bg-green-500 text-white">Cardiology</Badge>
+                        <Badge className="bg-blue-500 text-white">Cardiology</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className={`${
                           theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
                         }`}>License Status</span>
-                        <Badge className="bg-green-500 text-white">Active</Badge>
+                        <Badge className="bg-blue-500 text-white">Active</Badge>
                       </div>
                     </CardContent>
                   </Card>
@@ -1288,8 +1288,8 @@ Prescription: ${consultation.prescription}`,
                         }`}>
                           <div className={`w-2 h-2 rounded-full ${
                             activity.type === 'emergency' ? 'bg-red-500' :
-                            activity.type === 'consultation' ? 'bg-green-500' :
-                            activity.type === 'report' ? 'bg-blue-500' : 'bg-purple-500'
+                            activity.type === 'consultation' ? 'bg-blue-500' :
+                            activity.type === 'report' ? 'bg-blue-500' : 'bg-blue-400'
                           }`} />
                           <div className="flex-1">
                             <p className={`font-medium ${
@@ -1353,7 +1353,7 @@ Prescription: ${consultation.prescription}`,
                       </Button>
                     )}
                   </div>
-                  <Button className="bg-green-500 hover:bg-green-600" onClick={handleAddPatient}>
+                  <Button className="bg-blue-500 hover:bg-blue-600" onClick={handleAddPatient}>
                     <UserPlus className="h-4 w-4 mr-2" />
                     Add Patient
                   </Button>
@@ -1425,7 +1425,7 @@ Prescription: ${consultation.prescription}`,
                           </div>
                           <div className="flex items-center space-x-3">
                             <Badge className={
-                              patient.status === 'emergency' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+                              patient.status === 'emergency' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
                             }>
                               {patient.status}
                             </Badge>
@@ -1480,7 +1480,7 @@ Prescription: ${consultation.prescription}`,
                       <Download className="h-4 w-4 mr-2" />
                       Export All PDF
                     </Button>
-                    <Button className="bg-green-500 hover:bg-green-600" onClick={handleNewConsultation}>
+                    <Button className="bg-blue-500 hover:bg-blue-600" onClick={handleNewConsultation}>
                       <Plus className="h-4 w-4 mr-2" />
                       New Consultation
                     </Button>
@@ -1596,7 +1596,7 @@ Prescription: ${consultation.prescription}`,
                           </div>
                           <div className="flex items-center space-x-3">
                             <Badge className={
-                              consultation.status === 'completed' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
+                              consultation.status === 'completed' ? 'bg-blue-500 text-white' : 'bg-blue-400 text-white'
                             }>
                               {consultation.status}
                             </Badge>
@@ -1698,7 +1698,7 @@ Prescription: ${consultation.prescription}`,
                           onChange={(e) => setAiQuery(e.target.value)}
                           className="bg-zinc-600 border-zinc-500 text-zinc-100 placeholder:text-zinc-400"
                         />
-                        <Button className="w-full bg-purple-500 hover:bg-purple-600" onClick={handleAIAnalysis} disabled={isLoading}>
+                        <Button className="w-full bg-blue-500 hover:bg-blue-600" onClick={handleAIAnalysis} disabled={isLoading}>
                           <Brain className="h-4 w-4 mr-2" />
                           {isLoading ? "Analyzing..." : "Get AI Analysis"}
                         </Button>
@@ -1722,11 +1722,11 @@ Prescription: ${consultation.prescription}`,
                         <FileText className="h-4 w-4 mr-2" />
                         Generate PDF Report
                       </Button>
-                      <Button className="w-full bg-green-500 hover:bg-green-600" onClick={handleUploadReport}>
+                      <Button className="w-full bg-blue-500 hover:bg-blue-600" onClick={handleUploadReport}>
                         <Upload className="h-4 w-4 mr-2" />
                         Upload PDF Report
                       </Button>
-                      <Button className="w-full bg-purple-500 hover:bg-purple-600" onClick={handleExportData}>
+                      <Button className="w-full bg-blue-500 hover:bg-blue-600" onClick={handleExportData}>
                         <Download className="h-4 w-4 mr-2" />
                         Export All Data PDF
                       </Button>
@@ -1833,19 +1833,19 @@ Prescription: ${consultation.prescription}`,
                             <span className={`${
                               theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
                             }`}>AI Assistance</span>
-                            <Badge className="bg-green-500 text-white">Enabled</Badge>
+                            <Badge className="bg-blue-500 text-white">Enabled</Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className={`${
                               theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
                             }`}>Emergency Alerts</span>
-                            <Badge className="bg-green-500 text-white">Enabled</Badge>
+                            <Badge className="bg-blue-500 text-white">Enabled</Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className={`${
                               theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
                             }`}>Auto Backup</span>
-                            <Badge className="bg-green-500 text-white">Enabled</Badge>
+                            <Badge className="bg-blue-500 text-white">Enabled</Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className={`${
@@ -1884,11 +1884,11 @@ Prescription: ${consultation.prescription}`,
                         <Edit className="h-4 w-4 mr-2" />
                         Edit Profile
                       </Button>
-                      <Button className="w-full bg-green-500 hover:bg-green-600" onClick={handleSecuritySettings}>
+                      <Button className="w-full bg-blue-500 hover:bg-blue-600" onClick={handleSecuritySettings}>
                         <Shield className="h-4 w-4 mr-2" />
                         Security Settings
                       </Button>
-                      <Button className="w-full bg-orange-500 hover:bg-orange-600" onClick={handleBackupData}>
+                      <Button className="w-full bg-blue-500 hover:bg-blue-600" onClick={handleBackupData}>
                         <Database className="h-4 w-4 mr-2" />
                         Backup Data
                       </Button>
@@ -1904,7 +1904,7 @@ Prescription: ${consultation.prescription}`,
       {/* Notification */}
       {notification.show && (
         <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
-          notification.type === 'success' ? 'bg-green-500 text-white' :
+          notification.type === 'success' ? 'bg-blue-500 text-white' :
           notification.type === 'error' ? 'bg-red-500 text-white' :
           'bg-blue-500 text-white'
         }`}>
@@ -1988,7 +1988,7 @@ Prescription: ${consultation.prescription}`,
                     theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
                   }`}>Status</p>
                   <Badge className={
-                    selectedConsultation.status === 'completed' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
+                                                selectedConsultation.status === 'completed' ? 'bg-blue-500 text-white' : 'bg-blue-400 text-white'
                   }>
                     {selectedConsultation.status}
                   </Badge>
@@ -2412,7 +2412,7 @@ Prescription: ${consultation.prescription}`,
                 <h3 className="text-lg font-semibold text-zinc-100">Certifications</h3>
                 <div className="flex flex-wrap gap-2">
                   {doctorProfile.certifications.map((certification, index) => (
-                    <Badge key={index} variant="secondary" className="bg-green-500 text-white">
+                                          <Badge key={index} variant="secondary" className="bg-blue-500 text-white">
                       {certification}
                       <Button
                         size="sm"
@@ -2621,7 +2621,7 @@ Prescription: ${consultation.prescription}`,
                 }>
                   Cancel
                 </Button>
-                <Button onClick={handleCreateConsultation} className="bg-green-500 hover:bg-green-600">
+                <Button onClick={handleCreateConsultation} className="bg-blue-500 hover:bg-blue-600">
                   Create Consultation
                 </Button>
               </div>

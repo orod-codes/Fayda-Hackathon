@@ -231,7 +231,7 @@ export default function SystemBackupForm({ onClose, onSubmit }: SystemBackupForm
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading} className="bg-purple-500 hover:bg-purple-600">
+              <Button type="submit" disabled={isLoading} className="bg-blue-500 hover:bg-blue-600">
                 {isLoading ? "Creating Backup..." : "Start Backup"}
               </Button>
             </div>

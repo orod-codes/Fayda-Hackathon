@@ -144,7 +144,7 @@ export default function ChatPage() {
           backRoute="/patient"
           showUserMenu={false}
         >
-          <Badge className="bg-green-500/20 text-green-600 border-green-500/30 dark:text-green-400">
+                          <Badge className="bg-blue-500/20 text-blue-600 border-blue-500/30 dark:text-blue-400">
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
             AI Online
           </Badge>
@@ -188,8 +188,8 @@ export default function ChatPage() {
                         Your AI health companion powered by ChatGPT
                       </p>
                     </div>
-                    <Badge className="ml-auto bg-green-500/20 text-green-600 border-green-500/30 dark:text-green-400">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                    <Badge className="ml-auto bg-blue-500/20 text-blue-600 border-blue-500/30 dark:text-blue-400">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
                       Online
                     </Badge>
                   </div>

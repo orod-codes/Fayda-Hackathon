@@ -48,7 +48,7 @@ export default function EditPatientForm({ onClose, onSubmit, patient }: EditPati
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className={`w-full max-w-2xl ${theme === 'dark' ? 'bg-zinc-800 border-zinc-700' : 'bg-white border-zinc-200'}`}>
+      <Card className={`w-full max-w-2xl ${theme === 'dark' ? 'bg-blue-900 border-blue-700' : 'bg-white border-zinc-200'}`}>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle className={theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}>

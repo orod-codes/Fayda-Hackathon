@@ -70,7 +70,7 @@ export default function AddDoctorForm({ onClose, onSubmit }: AddDoctorFormProps)
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card className={`w-full max-w-2xl ${
-        theme === 'dark' ? 'bg-zinc-800 border-zinc-700' : 'bg-white border-zinc-200'
+        theme === 'dark' ? 'bg-blue-900 border-blue-700' : 'bg-white border-zinc-200'
       }`}>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
@@ -326,9 +326,9 @@ export default function AddDoctorForm({ onClose, onSubmit }: AddDoctorFormProps)
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading} className="bg-green-500 hover:bg-green-600">
-                {isLoading ? "Adding Doctor..." : "Add Doctor"}
-              </Button>
+                                <Button type="submit" disabled={isLoading} className="bg-blue-500 hover:bg-blue-600">
+                    {isLoading ? "Adding Doctor..." : "Add Doctor"}
+                  </Button>
             </div>
           </form>
         </CardContent>

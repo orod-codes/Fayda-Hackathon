@@ -22,6 +22,34 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
+        sans: [
+          "var(--font-open-sans)",
+          "Open Sans",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        roboto: [
+          "var(--font-roboto)",
+          "Roboto",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        montserrat: [
+          "var(--font-montserrat)",
+          "Montserrat",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        "open-sans": [
+          "var(--font-open-sans)",
+          "Open Sans",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
         mono: [
           "var(--font-jetbrains-mono)",
           "Fira Code",

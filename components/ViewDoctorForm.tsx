@@ -81,7 +81,7 @@ export default function ViewDoctorForm({ onClose, doctor }: ViewDoctorFormProps)
                     Status
                   </p>
                   <Badge className={
-                    doctor.status === 'active' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
+                                                doctor.status === 'active' ? 'bg-blue-500 text-white' : 'bg-blue-400 text-white'
                   }>
                     {doctor.status}
                   </Badge>

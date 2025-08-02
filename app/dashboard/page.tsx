@@ -145,7 +145,7 @@ export default function DashboardPage() {
 
                   <Card className="hover:bg-accent/50 transition-all duration-300 cursor-pointer">
                     <CardContent className="p-6 text-center">
-                      <User className="h-8 w-8 text-green-500 mx-auto mb-3" />
+                      <User className="h-8 w-8 text-blue-500 mx-auto mb-3" />
                       <h3 className="font-semibold">Medical History</h3>
                       <p className="text-sm text-muted-foreground">View your records</p>
                     </CardContent>

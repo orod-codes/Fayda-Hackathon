@@ -281,7 +281,7 @@ export default function HospitalAdminPage() {
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <Avatar>
-                      <AvatarFallback className="bg-purple-500 text-white">HA</AvatarFallback>
+                      <AvatarFallback className="bg-blue-500 text-white">HA</AvatarFallback>
                     </Avatar>
                     <div>
                       <p className="font-medium text-zinc-100">Hospital Admin</p>
@@ -504,7 +504,7 @@ export default function HospitalAdminPage() {
                     </Button>
                   </div>
                   <Button 
-                    className="bg-green-500 hover:bg-green-600"
+                    className="bg-blue-500 hover:bg-blue-600"
                     onClick={() => setShowAddDoctorForm(true)}
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
@@ -641,7 +641,7 @@ export default function HospitalAdminPage() {
                     <div className="space-y-4">
                       <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                           <span className="text-zinc-100">Dr. Abebe Kebede logged in</span>
                         </div>
                         <span className="text-sm text-zinc-400">2 minutes ago</span>
@@ -655,14 +655,14 @@ export default function HospitalAdminPage() {
                       </div>
                       <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                           <span className="text-zinc-100">Emergency alert triggered</span>
                         </div>
                         <span className="text-sm text-zinc-400">1 hour ago</span>
                       </div>
                       <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                           <span className="text-zinc-100">System backup completed</span>
                         </div>
                         <span className="text-sm text-zinc-400">3 hours ago</span>
@@ -687,7 +687,7 @@ export default function HospitalAdminPage() {
                       Search
                     </Button>
                   </div>
-                  <Button className="bg-green-500 hover:bg-green-600" onClick={() => setShowAddPatientForm(true)}>
+                  <Button className="bg-blue-500 hover:bg-blue-600" onClick={() => setShowAddPatientForm(true)}>
                     Add Patient
                   </Button>
                 </div>

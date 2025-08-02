@@ -65,10 +65,8 @@ export default function SuperAdminLoginPage() {
         }`}>
           <CardHeader className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-4">
-              <div className={`w-12 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded-xl flex items-center justify-center ${
-                theme === 'dark' ? 'shadow-lg' : 'shadow-md'
-              }`}>
-                <Shield className="h-6 w-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center">
+                <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={32} height={32} />
               </div>
               <div>
                 <CardTitle className={`text-2xl ${
@@ -134,7 +132,7 @@ export default function SuperAdminLoginPage() {
             <Button
               onClick={handleLogin}
               disabled={isLoading || !email || !password}
-              className="w-full bg-red-500 hover:bg-red-600 text-white"
+                              className="w-full bg-blue-500 hover:bg-blue-600 text-white"
             >
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>

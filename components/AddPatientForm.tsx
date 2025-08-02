@@ -57,7 +57,7 @@ export default function AddPatientForm({ onClose, onSubmit }: AddPatientFormProp
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className={`w-full max-w-2xl ${theme === 'dark' ? 'bg-zinc-800 border-zinc-700' : 'bg-white border-zinc-200'}`}>
+      <Card className={`w-full max-w-2xl ${theme === 'dark' ? 'bg-blue-900 border-blue-700' : 'bg-white border-zinc-200'}`}>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle className={theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}>
@@ -124,7 +124,7 @@ export default function AddPatientForm({ onClose, onSubmit }: AddPatientFormProp
             </div>
             <div className="flex justify-end space-x-3 pt-4">
               <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-              <Button type="submit" disabled={isLoading} className="bg-green-500 hover:bg-green-600">{isLoading ? "Adding Patient..." : "Add Patient"}</Button>
+                              <Button type="submit" disabled={isLoading} className="bg-blue-500 hover:bg-blue-600">{isLoading ? "Adding Patient..." : "Add Patient"}</Button>
             </div>
           </form>
         </CardContent>
