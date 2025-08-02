@@ -10,7 +10,7 @@ const Client = ({ accessToken, user }: { accessToken: string; user: any }) => {
   useEffect(() => {
     login(user)
     localStorage.setItem("accessToken", accessToken);
-    router.push("/patient")
+    router.push("/patient");
   }, [accessToken]);
 
   return <div></div>;

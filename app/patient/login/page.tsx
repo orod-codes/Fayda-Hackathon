@@ -3,12 +3,13 @@
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Phone, Lock, User, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/contexts/AuthContext';
@@ -21,11 +22,18 @@ export default function PatientLoginPage() {
   const router = useRouter();
 
   const [step, setStep] = useState(1);
-  const [faydaId, setFaydaId] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [otp, setOtp] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Step 2 - Additional features
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [twoFactor, setTwoFactor] = useState(false);
+  const [notifications, setNotifications] = useState(true);
 
   const loginUrl = useMemo(() => {
     const params = new URLSearchParams({
@@ -45,31 +53,45 @@ export default function PatientLoginPage() {
     return `https://esignet.ida.fayda.et/authorize?${params.toString()}`;
   }, []);
 
-  const handleFaydaLogin = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep(2);
-    }, 2000);
-  };
-
   const handlePhoneVerification = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      setStep(3);
+      setStep(2);
     }, 1500);
   };
 
-  const handleOtpVerification = () => {
+  const handlePasswordCreation = () => {
+    if (password !== confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+    if (password.length < 8) {
+      alert('Password must be at least 8 characters long!');
+      return;
+    }
+    
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setStep(3);
+    }, 2000);
+  };
+
+  const handleFaydaSignIn = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       login({
         id: 'patient-1',
-        name: 'Patient User',
-        email: 'patient@example.com',
+        name: fullName || 'Patient User',
+        email: email || 'patient@example.com',
+        phone: phoneNumber,
         role: 'patient',
+        preferences: {
+          twoFactor,
+          notifications
+        }
       });
       router.push('/patient');
     }, 2000);
@@ -95,7 +117,7 @@ export default function PatientLoginPage() {
               <div>
                 <CardTitle className="text-2xl">Patient Login</CardTitle>
                 <CardDescription className="text-muted-foreground">
-                  Fayda ID Authentication Required
+                  Complete your registration and authentication
                 </CardDescription>
               </div>
             </div>
@@ -104,66 +126,37 @@ export default function PatientLoginPage() {
           <CardContent className="space-y-4">
             {step === 1 && (
               <div className="space-y-4">
-                <div>
-                  <Label>Fayda ID (FIN)</Label>
-                  <Input
-                    value={faydaId}
-                    onChange={(e) => setFaydaId(e.target.value)}
-                    placeholder="Enter your Fayda ID"
-                  />
-                  <p className="text-xs mt-1 text-muted-foreground">
-                    Only patients need Fayda ID authentication
+                <div className="text-center space-y-2">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto">
+                    <Phone className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold">Welcome to Hakim AI</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Let's get you started with your health journey
                   </p>
                 </div>
                 <Button
-                  onClick={handleFaydaLogin}
-                  disabled={isLoading || !faydaId}
+                  onClick={handlePhoneVerification}
+                  disabled={isLoading}
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
-                  {isLoading ? 'Verifying...' : 'Login with Fayda'}
+                  {isLoading ? 'Starting...' : 'Get Started'}
                 </Button>
-
-                <div className="text-center text-sm text-muted-foreground">or</div>
-
-                <a href={loginUrl} className="w-full block">
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">Sign In with Fayda</Button>
-                </a>
               </div>
             )}
 
             {step === 2 && (
               <div className="space-y-4">
                 <div>
-                  <Label>Phone Number</Label>
-                  <Input
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="Enter your phone number"
-                  />
-                  <p className="text-xs mt-1 text-muted-foreground">
-                    We'll send an OTP to verify your number
-                  </p>
-                </div>
-                <Button
-                  onClick={handlePhoneVerification}
-                  disabled={isLoading || !phoneNumber}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white"
-                >
-                  {isLoading ? 'Sending OTP...' : 'Send OTP'}
-                </Button>
-              </div>
-            )}
-
-            {step === 3 && (
-              <div className="space-y-4">
-                <div>
-                  <Label>Enter OTP</Label>
+                  <Label>Create Password</Label>
                   <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
                       type={showPassword ? 'text' : 'password'}
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      placeholder="Enter 6-digit OTP"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Create a strong password"
+                      className="pl-10"
                     />
                     <Button
                       type="button"
@@ -176,16 +169,88 @@ export default function PatientLoginPage() {
                     </Button>
                   </div>
                   <p className="text-xs mt-1 text-muted-foreground">
-                    Check your phone for the 6-digit code
+                    Must be at least 8 characters long
                   </p>
                 </div>
+
+                <div>
+                  <Label>Confirm Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm your password"
+                      className="pl-10"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                </div>
+
                 <Button
-                  onClick={handleOtpVerification}
-                  disabled={isLoading || !otp}
-                  className="w-full bg-purple-500 hover:bg-purple-600 text-white"
+                  onClick={handlePasswordCreation}
+                  disabled={isLoading || !password || !confirmPassword}
+                  className="w-full bg-green-500 hover:bg-green-600 text-white"
                 >
-                  {isLoading ? 'Verifying...' : 'Verify OTP'}
+                  {isLoading ? 'Creating Account...' : 'Create Account'}
                 </Button>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="space-y-4">
+                <div className="text-center space-y-2">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto">
+                    <Shield className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold">Sign In with Fayda</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Complete your authentication with Fayda ID to access your health data
+                  </p>
+                </div>
+
+                <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-sm font-semibold">✓</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-green-900 dark:text-green-100">Claims Verification</h4>
+                      <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+                        Make sure all your claims are verified and up to date. This ensures accurate health data retrieval and proper service delivery.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                
+
+                <div className="w-full">
+                  <Image 
+                    src="/images/make.png" 
+                    alt="Claims Verification" 
+                    width={400} 
+                    height={300}
+                    className="w-full h-auto rounded-lg"
+                  />
+                </div>
+
+                <a href={loginUrl} className="w-full block">
+                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                    {isLoading ? 'Connecting to Fayda...' : 'VerificationIn with Fayda'}
+                  </Button>
+                </a>
+
+              
               </div>
             )}
           </CardContent>
@@ -193,22 +258,22 @@ export default function PatientLoginPage() {
 
         <div className="mt-6 text-center">
           <div className="bg-card/30 border border-border rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Login Steps</h3>
+            <h3 className="font-semibold mb-2">Registration Steps</h3>
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Badge className={step >= 1 ? 'bg-blue-500' : 'bg-muted'}>1</Badge>
-                <span className="text-sm text-muted-foreground">
-                  Fayda ID Verification
-                </span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Badge className={step >= 2 ? 'bg-green-500' : 'bg-muted'}>2</Badge>
-                <span className="text-sm text-muted-foreground">Phone Number</span>
-              </div>
+                              <div className="flex items-center space-x-2">
+                  <Badge className={step >= 1 ? 'bg-blue-500' : 'bg-muted'}>1</Badge>
+                  <span className="text-sm text-muted-foreground">
+                    Welcome & Get Started
+                  </span>
+                </div>
+                              <div className="flex items-center space-x-2">
+                  <Badge className={step >= 2 ? 'bg-green-500' : 'bg-muted'}>2</Badge>
+                  <span className="text-sm text-muted-foreground">Create password</span>
+                </div>
               <div className="flex items-center space-x-2">
                 <Badge className={step >= 3 ? 'bg-purple-500' : 'bg-muted'}>3</Badge>
                 <span className="text-sm text-muted-foreground">
-                  OTP Verification
+                  Sign In with Fayda
                 </span>
               </div>
             </div>

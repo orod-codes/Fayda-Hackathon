@@ -6,10 +6,12 @@ import { ThemeToggle } from "@/components/ThemeToggle"
 import { Footer } from "@/components/Footer"
 import { MessageSquare, Settings, User, Stethoscope, Building, Shield } from "lucide-react"
 import Image from "next/image"
+import { useTheme } from "@/contexts/ThemeContext"
 
 export default function HomePage() {
   const { language, setLanguage, translations } = useLanguage()
   const router = useRouter()
+  const { isDark, isLight } = useTheme()
 
   const languages = [
     { code: "en" as Language, name: "English", flag: "🇺🇸" },
@@ -60,10 +62,16 @@ export default function HomePage() {
       
       <header className="border-b border-border/50 backdrop-blur-sm px-6 py-6 relative z-10">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-4">
             <div className="relative">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg">
-                <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={24} height={24} className="w-6 h-6" />
+                <Image 
+                  src={isDark ? "/images/hakim-ai-logo.png" : "/images/11.png"} 
+                  alt="hakim-ai Logo" 
+                  width={24} 
+                  height={24} 
+                  className="w-6 h-6" 
+                />
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             </div>
@@ -92,7 +100,13 @@ export default function HomePage() {
         <div className="max-w-2xl w-full text-center">
           <div className="mb-12">
             <div className="flex items-center justify-center mx-auto mb-8">
-              <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={2000} height={200} className="w-480 h-480" />
+              <Image 
+                src={isDark ? "/images/hakim-ai-logo.png" : "/images/11.png"} 
+                alt="hakim-ai Logo" 
+                width={2000} 
+                height={200} 
+                className="w-480 h-480" 
+              />
             </div>
             <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
               {translations.welcome}
