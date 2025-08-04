@@ -14,6 +14,7 @@ import db from './db.js';
 
 const app = express();
 
+
 // --- Initialize OpenAI Client ---
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

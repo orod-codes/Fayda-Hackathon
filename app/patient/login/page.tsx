@@ -3,20 +3,19 @@
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft, Eye, EyeOff, Phone, Lock, User, Shield } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Phone, Lock, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/contexts/AuthContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function PatientLoginPage() {
-  const { translations, language } = useLanguage();
+  const { translations } = useLanguage();
   const { theme } = useTheme();
   const { login } = useAuth();
   const router = useRouter();
@@ -28,8 +27,7 @@ export default function PatientLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
-  // Step 2 - Additional features
+
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [twoFactor, setTwoFactor] = useState(false);
@@ -70,7 +68,9 @@ export default function PatientLoginPage() {
       alert('Password must be at least 8 characters long!');
       return;
     }
-    
+
+    localStorage.setItem('temp_password', password);
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -90,8 +90,8 @@ export default function PatientLoginPage() {
         role: 'patient',
         preferences: {
           twoFactor,
-          notifications
-        }
+          notifications,
+        },
       });
       router.push('/patient');
     }, 2000);
@@ -232,8 +232,6 @@ export default function PatientLoginPage() {
                   </div>
                 </div>
 
-                
-
                 <div className="w-full">
                   <Image 
                     src="/images/make.png" 
@@ -246,11 +244,9 @@ export default function PatientLoginPage() {
 
                 <a href={loginUrl} className="w-full block">
                   <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                    {isLoading ? 'Connecting to Fayda...' : 'VerificationIn with Fayda'}
+                    {isLoading ? 'Connecting to Fayda...' : 'Verification with Fayda'}
                   </Button>
                 </a>
-
-              
               </div>
             )}
           </CardContent>
@@ -260,23 +256,32 @@ export default function PatientLoginPage() {
           <div className="bg-card/30 border border-border rounded-lg p-4">
             <h3 className="font-semibold mb-2">Registration Steps</h3>
             <div className="space-y-2">
-                              <div className="flex items-center space-x-2">
-                  <Badge className={step >= 1 ? 'bg-blue-500' : 'bg-muted'}>1</Badge>
-                  <span className="text-sm text-muted-foreground">
-                    Welcome & Get Started
-                  </span>
-                </div>
-                              <div className="flex items-center space-x-2">
-                  <Badge className={step >= 2 ? 'bg-blue-500' : 'bg-muted'}>2</Badge>
-                  <span className="text-sm text-muted-foreground">Create password</span>
-                </div>
+              <div className="flex items-center space-x-2">
+                <Badge className={step >= 1 ? 'bg-blue-500' : 'bg-muted'}>1</Badge>
+                <span className="text-sm text-muted-foreground">Welcome & Get Started</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Badge className={step >= 2 ? 'bg-blue-500' : 'bg-muted'}>2</Badge>
+                <span className="text-sm text-muted-foreground">Create password</span>
+              </div>
               <div className="flex items-center space-x-2">
                 <Badge className={step >= 3 ? 'bg-blue-500' : 'bg-muted'}>3</Badge>
-                <span className="text-sm text-muted-foreground">
-                  Sign In with Fayda
-                </span>
+                <span className="text-sm text-muted-foreground">Sign In with Fayda</span>
               </div>
             </div>
+          </div>
+
+          {/* ✅ Moved this inside the same layout block */}
+          <div className="mt-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <button
+                onClick={() => router.push('/patient/logging')}
+                className="text-blue-600 hover:underline font-medium"
+              >
+                Log in here
+              </button>
+            </p>
           </div>
         </div>
       </div>

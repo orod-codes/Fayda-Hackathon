@@ -1,8 +1,11 @@
 'use client';
 
-import { useState , useRef } from 'react';
-
+import { useState , useEffect, useRef } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Button } from '@/components/ui/button';
+
+import io from 'socket.io-client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -34,22 +37,180 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import Image from 'next/image';
+import { differenceInDays, parseISO, isToday } from 'date-fns';
+  type Medication = {
+  id: string;
+  name: string;
+  dosage: string;
+  frequency: string;
+  time: string;
+  status: string;
+  startDate?: string;
+  duration?: number;
+};// At the top, outside your component:
+const initialMedications: Medication[] = [
+  {
+    id: '1',
+    name: 'Amlodipine',
+    dosage: '5mg',
+    frequency: 'Once daily',
+    time: '08:00 AM',
+    status: 'Completed',
+    startDate: "2025-07-29",
+    duration: 5,
+  },
+  {
+    id: '2',
+    name: 'lala',
+    dosage: '500mg',
+    frequency: 'Twice daily',
+    time: '08:00 AM, 08:00 PM',
+    status: 'Active',
+    startDate: "2025-07-04",
+    duration: 5,
+  },
+  {
+    id: '3',
+    name: 'Metformin',
+    dosage: '500mg',
+    frequency: 'Twice daily',
+    time: '08:00,20:00',
+    startDate: '2025-08-01',
+    duration: 5,
+    status: 'Active',
+  }
+];
 
 export default function PatientPage() {
-  const { translations, language } = useLanguage();
-  const { theme } = useTheme();
-  const { user, logout } = useAuth();
+  
+    const { user, logout } = useAuth();
   const router = useRouter();
+
+  // All hooks go here, before any return!
+  const [medications, setMedications] = useState<Medication[]>(initialMedications);
+  const { translations, language } = useLanguage();
+  const [users, setUsers] = useState(null);
+
+  const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('overview');
+  const [notification, setNotification] = useState<string | null>(null);
+  const [selectedHospital, setSelectedHospital] = useState('');
+  const [selectedDoctor, setSelectedDoctor] = useState('');
+  const [showVideo, setShowVideo] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
+useEffect(() => {
+  if (user) {
+    localStorage.setItem("user", JSON.stringify(user));
+  }
+}, [user]);
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    try {
+      const parsed = JSON.parse(storedUser);
+      setUsers(parsed);
+    } catch (e) {
+      console.error("Invalid user data in localStorage", e);
+    }
+  }
+}, []);
+
+
+useEffect(() => {
+  const token = localStorage.getItem("accessToken");
+
+  if (!token && !user) {
+    router.replace("/patient/logging"); // or /login
+  }
+}, [user, router]);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUsers(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Automatically update status based on date/duration
+  useEffect(() => {
+    setMedications((prevMeds) =>
+      prevMeds.map((med) => {
+        if (!med.startDate || typeof med.duration !== 'number') return med;
+        const start = parseISO(med.startDate);
+        const today = new Date();
+        const daysPassed = differenceInDays(today, start);
+        if (daysPassed >= med.duration) {
+          return { ...med, status: 'Completed' };
+        }
+        return med;
+      })
+    );
+  }, []);
+const isMedicationActiveToday = (med: Medication): boolean => {
+  if (!med.startDate || typeof med.duration !== 'number') return false;
+  const start = parseISO(med.startDate);
+  const today = new Date();
+  const daysPassed = differenceInDays(today, start);
+  return daysPassed >= 0 && daysPassed < med.duration;
+};
+useEffect(() => {
+  const interval = setInterval(() => {
+    const now = new Date();
+    const currentTime = now.toTimeString().slice(0, 5); // 'HH:MM'
+
+    medications.forEach((med) => {
+      if (!isMedicationActiveToday(med)) return;
+
+      const reminderTimes = med.time.split(',');
+      if (reminderTimes.includes(currentTime)) {
+        toast.info(` Time to take ${med.name} (${med.dosage})`, {
+          position: 'top-right',
+          autoClose: 5000,
+        });
+      }
+    });
+  }, 60 * 1000); // check every 1 minute
+
+  return () => clearInterval(interval);
+}, []);
+const updateStatuses = () => {
+  medications.forEach((med) => {
+    if (!med.startDate || typeof med.duration !== 'number') return;
+    const start = parseISO(med.startDate);
+    const end = new Date(start);
+    end.setDate(start.getDate() + (med.duration ?? 0));
+
+    if (new Date() > end) {
+      med.status = 'Completed'; // Ideally trigger setState here
+    }
+  });
+};
+
+  useEffect(() => {
+  // Create socket only once
+  const socket = io('http://localhost:5001', { transports: ['websocket'] });
+
+  socket.on('connect_error', (err) => {
+    console.error('Socket connection error:', err);
+  });
+socket.on('notification', (data) => {
+  const latestMed = medications[0];
+  setNotification(`Reminder: Take your ${latestMed.name} (${latestMed.dosage})`);
+  setTimeout(() => setNotification(null), 5000);
+});
+
+
+  return () => {
+    socket.off('notification');
+    socket.disconnect();
+  };
+}, []);
 
   const handleLogout = () => {
     logout();
     router.push('/');
   };
-  const [selectedHospital, setSelectedHospital] = useState('');
-const [selectedDoctor, setSelectedDoctor] = useState('');
-const [showVideo, setShowVideo] = useState(false);
-
 
 
 // const vapidKeys = webpush.generateVAPIDKeys()
@@ -66,8 +227,10 @@ const [showVideo, setShowVideo] = useState(false);
       doctor: 'Dr. Abebe Kebede',
       diagnosis: 'Hypertension',
       treatment: 'Amlodipine 5mg daily',
-      status: 'Active',
-    },
+     
+    }
+    ,
+
     {
       id: '2',
       date: '2023-12-20',
@@ -75,15 +238,16 @@ const [showVideo, setShowVideo] = useState(false);
       doctor: 'Dr. Fatima Ahmed',
       diagnosis: 'Diabetes Type 2',
       treatment: 'Metformin 500mg twice daily',
-      status: 'Active',
+   
     },
   ];
 const doctorsByHospital: Record<string, { name: string; email: string }[]> = {
   'Tikur Anbessa Hospital': [
     { name: 'Dr. Abebe Kebede', email: 'aaufresh@gmail.com' },
-    { name: 'Dr. Mesfin Tesfaye', email: 'girmadorsis@gmail.com' },
+    { name: 'Dr. Mesfin Tesfaye', email: 'seburiahlabent@gmail.com' },
   ]
   ,
+
 
   "St. Paul's Hospital": [
     { name: 'Dr. Fatima Ahmed', email: 'fatima@example.com' },
@@ -97,9 +261,6 @@ const handleUploadClick = () => {
   fileInputRef.current?.click();
 };
 
-const fileInputRef = useRef<HTMLInputElement>(null);
-
-const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
 
 
@@ -118,30 +279,16 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUploadedFiles(prev => [...prev, ...fileArray]);
   }}
 
-  const medications = [
-    {
-      id: '1',
-      name: 'Amlodipine',
-      dosage: '5mg',
-      frequency: 'Once daily',
-      time: '08:00 AM',
-      status: 'Active',
-    },
-    {
-      id: '2',
-      name: 'Metformin',
-      dosage: '500mg',
-      frequency: 'Twice daily',
-      time: '08:00 AM, 08:00 PM',
-      status: 'Active',
-    },
-  ];
 
   return (
 	
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-zinc-900 text-zinc-100' : 'bg-slate-50 text-zinc-900'}`}>
       {/* Header */}
-	
+	 {notification && (
+        <div className="fixed top-4 right-4 bg-sky-500 text-white px-4 py-2 rounded shadow-lg z-50">
+          {notification}
+        </div>
+      )}
       <header className={`border-b px-4 py-4 ${theme === 'dark' ? 'border-zinc-800' : 'border-zinc-200'}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -187,8 +334,8 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                       <AvatarFallback className="bg-blue-500 text-white">p</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium text-zinc-100">{user?.name}</p>
-                      <p className="text-sm text-zinc-400">{user?.email}</p>
+                      <p className="font-medium text-zinc-100">{users?.name}</p>
+                      <p className="text-sm text-zinc-400">{users?.email}</p>
                     </div>
                   </div>
 
@@ -278,17 +425,19 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                 {/* Health Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 
-                  <Card className="bg-zinc-800/50 border-zinc-700">
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-3">
-                        <Pill className="h-8 w-8 text-blue-400" />
-                        <div>
-                          <p className="text-2xl font-bold text-zinc-100">2</p>
-                          <p className="text-sm text-zinc-400">Active Medications</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+               <Card className="bg-zinc-800/50 border-zinc-700">
+  <CardContent className="p-6">
+    <div className="flex items-center space-x-3">
+      <Pill className="h-8 w-8 text-blue-400" />
+      <div>
+        <p className="text-2xl font-bold text-zinc-100">
+          {medications.filter(med => med.status === 'Active').length}
+        </p>
+        <p className="text-sm text-zinc-400">Active Medications</p>
+      </div>
+    </div>
+  </CardContent>
+</Card>
                   <Card className="bg-zinc-800/50 border-zinc-700">
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
@@ -388,9 +537,7 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                                 {record.doctor} - {record.hospital}
                               </p>
                             </div>
-                            <Badge variant={record.status === 'Active' ? 'default' : 'secondary'}>
-                              {record.status}
-                            </Badge>
+                         
                           </div>
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
@@ -410,42 +557,70 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
               </div>
             )}
 
-            {activeTab === 'medications' && (
-              <div className="space-y-6">
-                <Card className="bg-zinc-800/50 border-zinc-700">
-                  <CardHeader>
-                    <CardTitle className="text-zinc-100">Medication Management</CardTitle>
-                    <CardDescription className="text-zinc-400">
-                      AI-powered medication reminders and tracking
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {medications.map((med) => (
-                        <div key={med.id} className="border border-zinc-700 rounded-lg p-4">
-                          <div className="flex justify-between items-start mb-3">
-                            <div>
-                              <h3 className="font-semibold text-zinc-100">{med.name}</h3>
-                              <p className="text-sm text-zinc-400">
-                                {med.dosage} - {med.frequency}
-                              </p>
-                            </div>
-                            <Badge variant={med.status === 'Active' ? 'default' : 'secondary'}>{med.status}</Badge>
-                          </div>
-                          <div className="flex items-center space-x-2 text-sm">
-                            <Clock className="h-4 w-4 text-zinc-400" />
-                            <span className="text-zinc-400">Reminder time:</span>
-                            <span className="text-zinc-100">{med.time}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
+  {activeTab === 'medications' && (
+  <div className="space-y-6">
+    <Card className="bg-zinc-900/60 border border-zinc-700 shadow-lg rounded-2xl">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-zinc-100 text-xl">Medication Management</CardTitle>
+        <CardDescription className="text-zinc-400">
+          Smart reminders and medication tracking powered by AI
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+        
 
-            {activeTab === 'documents' && (
+
+{medications.map((med) => (
+  <div
+    key={med.id}
+    className="border border-zinc-700 bg-zinc-800/50 rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between hover:border-sky-500 transition-all duration-300 mb-4"
+  >
+    <div>
+      <h3 className="font-semibold text-lg text-white flex items-center gap-2">
+        <Pill className="h-5 w-5 text-sky-400" />
+        {med.name}
+      </h3>
+      <p className="text-sm text-zinc-400">
+        {med.dosage} &bull; {med.frequency}
+      </p>
+      <div className="flex items-center text-sm text-zinc-400 gap-2 mt-1">
+        <Clock className="h-4 w-4" />
+        Reminder:
+        <span className="text-zinc-100 font-medium">{med.time}</span>
+      </div>
+    </div>
+    <div className="flex flex-col items-end gap-2 mt-4 md:mt-0">
+      <Badge
+        className="rounded-full px-3 py-1 text-xs"
+        variant={med.status === 'Active' ? 'default' : 'secondary'}
+      >
+        {med.status}
+      </Badge>
+      {med.status !== 'Completed' && (
+        <Button
+          className="bg-sky-600 hover:bg-sky-700 text-white text-sm shadow-md"
+          size="sm"
+          onClick={() => {
+            setNotification(
+              `💊 Medication Reminder: Time to take ${med.name} (${med.dosage}) at ${med.time}.`
+            );
+            setTimeout(() => setNotification(null), 5000);
+          }}
+        >
+          Remind Me
+        </Button>
+      )}
+    </div>
+  </div>
+))}
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+)}
+
+        {activeTab === 'documents' && (
               <div className="space-y-6">
                 <Card className="bg-zinc-800/50 border-zinc-700">
                   <CardHeader>
@@ -558,7 +733,7 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
     // Send POST request to backend
 	
-    await fetch("http://localhost:5000/api/send-email", {
+    await fetch("http://localhost:5001/api/send-email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

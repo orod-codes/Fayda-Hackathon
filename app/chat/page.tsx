@@ -40,15 +40,17 @@ export default function ChatPage() {
   const { translations, language } = useLanguage();
   const { theme } = useTheme();
   const { user, logout } = useAuth();
+
+
   const router = useRouter();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: "Hello! I'm hakim-ai, your AI health assistant. How can I help you today?",
-      role: 'assistant',
-      timestamp: new Date(),
-    },
-  ]);
+ const [messages, setMessages] = useState<Message[]>([
+  {
+    id: '1',
+    content: `Hello ${user?.name ?? 'there'}, I'm hakim-ai, your AI health assistant. How can I help you today?`,
+    role: 'assistant',
+    timestamp: new Date(),
+  },
+]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isEmergency, setIsEmergency] = useState(false);
