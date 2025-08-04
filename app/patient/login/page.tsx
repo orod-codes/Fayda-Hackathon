@@ -142,6 +142,12 @@ export default function PatientLoginPage() {
                 >
                   {isLoading ? 'Starting...' : 'Get Started'}
                 </Button>
+
+                <div className="text-center text-sm text-gray-500">or</div>
+
+                <a href={loginUrl} className="w-full block">
+                  <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white">Sign In with Fayda</Button>
+                </a>
               </div>
             )}
 

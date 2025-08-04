@@ -480,7 +480,6 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                     </CardContent>
                   </Card>
 
-
                 </div>
 
                 {/* Recent Activity */}

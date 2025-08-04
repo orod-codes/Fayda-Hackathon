@@ -27,6 +27,7 @@ export default function HomePage() {
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
+      
       const data = await res.json();
       if (data.authorizationUrl) {
         window.location.href = data.authorizationUrl;
