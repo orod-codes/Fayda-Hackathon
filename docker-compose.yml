@@ -1,40 +1,72 @@
 version: '3.8'
 
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - hakim-network
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
-    env_file:
-      - ./backend/.env
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - PORT=3001
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=${DB_USER:-hakim_user}
+      - DB_PASSWORD=${DB_PASSWORD:-hakim_password}
+      - DB_NAME=${DB_NAME:-hakim_ai}
+      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-hakim_root_password}
+      - SESSION_SECRET=${SESSION_SECRET:-hakim-ai-super-secret-session-key-2024}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-hakim-ai-secure-encryption-key-32-chars-long!}
+      - CLIENT_ID=${CLIENT_ID:-your_fayda_client_id}
+      - CLIENT_ASSERTION_TYPE=${CLIENT_ASSERTION_TYPE:-urn:ietf:params:oauth:client-assertion-type:jwt-bearer}
+      - AUTHORIZATION_ENDPOINT=${AUTHORIZATION_ENDPOINT:-https://fayda.example.com/oauth2/authorize}
+      - TOKEN_ENDPOINT=${TOKEN_ENDPOINT:-https://fayda.example.com/oauth2/token}
+      - USERINFO_ENDPOINT=${USERINFO_ENDPOINT:-https://fayda.example.com/oauth2/userinfo}
+      - REDIRECT_URI=${REDIRECT_URI:-http://localhost:3000/callback}
+      - PRIVATE_KEY=${PRIVATE_KEY:-your_base64_encoded_private_key}
+      - ALGORITHM=${ALGORITHM:-RS256}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-your_openai_api_key}
+    restart: unless-stopped
+    depends_on:
+      - db
     networks:
       - hakim-network
 
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+  db:
+    image: mysql:8.0
+    restart: always
     environment:
-      - NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-hakim_root_password}
+      MYSQL_DATABASE: ${DB_NAME:-hakim_ai}
+      MYSQL_USER: ${DB_USER:-hakim_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-hakim_password}
+    ports:
+      - "3306:3306"
     volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
-    depends_on:
-      - backend
+      - mysql-data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     networks:
       - hakim-network
+    command: --default-authentication-plugin=mysql_native_password
 
 networks:
   hakim-network:
     driver: bridge
+
+volumes:
+  mysql-data:

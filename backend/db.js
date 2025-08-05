@@ -1,71 +1,160 @@
-const db = {
-  users: {
-    "FAYDA_ID_FOR_PATIENT_1": {
-      role: "patient",
-      allergies: ["Peanuts"],
-      prescriptions: [],
-      consultations: [],
-      personalData: {
-        name: "Test Patient",
-        age: 30,
-        gender: "Male",
-        bloodType: "O+",
-        emergencyContact: "+251911234567"
-      }
-    },
-    "FAYDA_ID_FOR_PATIENT_2": {
-      role: "patient",
-      allergies: ["Aspirin", "Latex"],
-      prescriptions: [
-        {
-          id: "1",
-          prescription: "Paracetamol 500mg",
-          medication: "Paracetamol",
-          dosage: "500mg twice daily",
-          instructions: "Take after meals",
-          prescribedBy: "DR_DEMO_001",
-          prescribedAt: "2024-01-15T10:30:00Z",
-          status: "active"
-        }
-      ],
-      consultations: [],
-      personalData: {
-        name: "Demo Patient 2",
-        age: 45,
-        gender: "Female",
-        bloodType: "A-",
-        emergencyContact: "+251922345678"
-      }
-    },
-    "DR_DEMO_001": {
-      role: "doctor",
-      specialization: "General Medicine",
-      licenseNumber: "MD-12345",
-      hospital: "Tikur Anbessa Hospital",
-      personalData: {
-        name: "Dr. Abebe Kebede",
-        email: "doctor@hakim-ai.et"
-      }
-    },
-    "ADMIN_DEMO_001": {
-      role: "hospital-admin",
-      hospital: "Tikur Anbessa Hospital",
-      permissions: ["manage_doctors", "view_reports", "manage_patients"],
-      personalData: {
-        name: "Hospital Administrator",
-        email: "admin@tikuranbessa.et"
+import Database from 'better-sqlite3';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import fs from 'fs';
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// SQLite database connection
+const dbPath = path.join(__dirname, '..', 'database', 'hakim_ai.db');
+const database = new Database(dbPath);
+
+// Enable foreign keys
+database.pragma('foreign_keys = ON');
+
+// Test database connection
+const testConnection = async () => {
+  try {
+    database.prepare('SELECT 1').get();
+    console.log('✅ Database connected successfully');
+  } catch (error) {
+    console.error('❌ Database connection failed:', error.message);
+    throw error;
+  }
+};
+
+// Initialize database with schema
+const initializeDatabase = async () => {
+  try {
+    // Check if users table exists and has the new columns
+    let needsMigration = false;
+    try {
+      const result = database.prepare('PRAGMA table_info(users)').all();
+      const hasHospitalId = result.some(col => col.name === 'hospital_id');
+      const hasStatus = result.some(col => col.name === 'status');
+      needsMigration = !hasHospitalId || !hasStatus;
+    } catch (error) {
+      // Table doesn't exist, so we need to create it
+      needsMigration = true;
+    }
+    
+    if (needsMigration) {
+      console.log('🔄 Running database migration...');
+      const migrationPath = path.join(__dirname, '..', 'database', 'migrate.sql');
+      
+      if (fs.existsSync(migrationPath)) {
+        const migration = fs.readFileSync(migrationPath, 'utf8');
+        const statements = migration.split(';').filter(stmt => stmt.trim());
+        
+        database.transaction(() => {
+          for (const statement of statements) {
+            if (statement.trim()) {
+              try {
+                database.exec(statement.trim());
+              } catch (error) {
+                // Some migration steps might fail if already applied, that's okay
+                console.log('Migration step skipped:', error.message);
+              }
+            }
+          }
+        })();
+        
+        console.log('✅ Database migration completed successfully');
       }
     }
-  },
-  // Session store for demo purposes
-  sessions: {},
-  
-  // Application metadata
-  metadata: {
-    version: "1.0.0",
-    lastUpdated: new Date().toISOString(),
-    totalUsers: 4
+    
+    // Now run the full schema to ensure everything is up to date
+    const schemaPath = path.join(__dirname, '..', 'database', 'schema_sqlite.sql');
+    
+    if (fs.existsSync(schemaPath)) {
+      const schema = fs.readFileSync(schemaPath, 'utf8');
+      // Split and execute statements individually for SQLite
+      const statements = schema.split(';').filter(stmt => stmt.trim());
+      
+      database.transaction(() => {
+        for (const statement of statements) {
+          if (statement.trim()) {
+            try {
+              database.exec(statement.trim());
+            } catch (error) {
+              // Some statements might fail if already applied, that's okay for INSERT OR IGNORE
+              if (!error.message.includes('already exists') && !error.message.includes('UNIQUE constraint')) {
+                console.log('Schema step skipped:', error.message);
+              }
+            }
+          }
+        }
+      })();
+      
+      console.log('✅ Database schema initialized successfully');
+    } else {
+      console.log('⚠️ Schema file not found, skipping initialization');
+    }
+  } catch (error) {
+    console.error('❌ Database initialization failed:', error.message);
+    throw error;
   }
+};
+
+// Convert PostgreSQL placeholders ($1, $2) to SQLite (?, ?)
+const convertQuery = (sql, params) => {
+  let convertedSql = sql;
+
+  // Replace PostgreSQL $1, $2, etc. with ? for SQLite
+  for (let i = 0; i < params.length; i++) {
+    convertedSql = convertedSql.replace(`$${i+1}`, '?');
+  }
+
+  return { sql: convertedSql, params };
+};
+
+// Database utility functions
+const db = {
+  // Execute a query with parameters
+  query: async (sql, params = []) => {
+    const { sql: convertedSql } = convertQuery(sql, params);
+    try {
+      const stmt = database.prepare(convertedSql);
+      if (convertedSql.trim().toUpperCase().startsWith('SELECT')) {
+        return stmt.all(params);
+      } else {
+        const result = stmt.run(params);
+        return { insertId: result.lastInsertRowid, changes: result.changes };
+      }
+    } catch (error) {
+      console.error('Database query error:', error);
+      throw error;
+    }
+  },
+
+  // Execute a single query and return the first result
+  queryOne: async (sql, params = []) => {
+    const { sql: convertedSql } = convertQuery(sql, params);
+    try {
+      return database.prepare(convertedSql).get(params) || null;
+    } catch (error) {
+      console.error('Database query error:', error);
+      throw error;
+    }
+  },
+
+  // Execute a transaction
+  transaction: async (callback) => {
+    const transaction = database.transaction(() => {
+      return callback(database);
+    });
+    return transaction();
+  },
+
+  // Test connection
+  testConnection,
+  
+  // Initialize database
+  initializeDatabase
 };
 
 export default db;
