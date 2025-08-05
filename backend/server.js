@@ -10,15 +10,25 @@ import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import OpenAI from 'openai';
-import db from './db.js';
+import { testConnection } from './database/connection.js';
+import { logRequest } from './middleware/auth.js';
+
+// Import routes
+import authRoutes from './routes/auth.js';
+import superAdminRoutes from './routes/super-admin.js';
+import hospitalAdminRoutes from './routes/hospital-admin.js';
+import doctorRoutes from './routes/doctor.js';
+import patientRoutes from './routes/patient.js';
 
 const app = express();
 
-
 // --- Initialize OpenAI Client ---
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openai = null;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 // --- Middleware Setup ---
 app.use(morgan('dev'));
@@ -48,7 +58,38 @@ app.use(session({
   name: 'hakim.sid'
 }));
 
-// --- Helper Functions ---
+// Apply logging middleware
+app.use(logRequest);
+
+// --- Health Check ---
+app.get('/health', async (req, res) => {
+  try {
+    const dbStatus = await testConnection();
+    res.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      database: dbStatus ? 'connected' : 'disconnected',
+      version: '1.0.0'
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      error: error.message
+    });
+  }
+});
+
+// --- API Routes ---
+app.use('/api/auth', authRoutes);
+app.use('/api/super-admin', superAdminRoutes);
+app.use('/api/hospital-admin', hospitalAdminRoutes);
+app.use('/api/doctor', doctorRoutes);
+app.use('/api/patient', patientRoutes);
+
+// --- Fayda Integration Routes (Existing) ---
+
+// Helper Functions
 const base64URLEncode = (buffer) => {
   return buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 };
@@ -67,7 +108,7 @@ const generateClientAssertion = () => {
   return jwt.sign(payload, privateKey, { algorithm: process.env.ALGORITHM, keyid: privateKey.kid });
 };
 
-// --- Authentication Routes ---
+// Authentication Routes
 app.get('/api/auth/login', (req, res) => {
   const codeVerifier = base64URLEncode(crypto.randomBytes(32));
   const codeChallenge = base64URLEncode(crypto.createHash('sha256').update(codeVerifier).digest());
@@ -99,292 +140,165 @@ app.get('/api/auth/login', (req, res) => {
   authUrl.searchParams.append('code_challenge_method', 'S256');
   authUrl.searchParams.append('acr_values', 'mosip:idp:acr:generated-code');
   authUrl.searchParams.append('claims', JSON.stringify(claims));
+  authUrl.searchParams.append('display', 'page');
+  authUrl.searchParams.append('nonce', uuidv4());
+  authUrl.searchParams.append('ui_locales', 'en');
 
-  res.json({ authorizationUrl: authUrl.toString() });
+  res.json({ authUrl: authUrl.toString() });
 });
 
-app.post('/api/auth/token', async (req, res, next) => {
+app.get('/api/auth/callback', async (req, res) => {
+  const { code, state } = req.query;
+
+  if (!code || !state) {
+    return res.status(400).json({ error: 'Missing code or state parameter' });
+  }
+
+  if (state !== req.session.state) {
+    return res.status(400).json({ error: 'Invalid state parameter' });
+  }
+
   try {
-    const { authorization_code, state: clientState } = req.body;
-    const { codeVerifier, state: sessionState } = req.session;
-
-    if (clientState !== sessionState) {
-      return res.status(403).json({ error: 'Invalid state parameter', details: 'CSRF attack suspected.' });
-    }
-
     const clientAssertion = generateClientAssertion();
-
     const tokenResponse = await fetch(process.env.TOKEN_ENDPOINT, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
       body: new URLSearchParams({
         grant_type: 'authorization_code',
-        code: authorization_code,
-        redirect_uri: process.env.REDIRECT_URI,
         client_id: process.env.CLIENT_ID,
+        client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
         client_assertion: clientAssertion,
-        client_assertion_type: process.env.CLIENT_ASSERTION_TYPE,
-        code_verifier: codeVerifier,
+        code: code,
+        redirect_uri: process.env.REDIRECT_URI,
+        code_verifier: req.session.codeVerifier,
       }),
     });
 
     const tokenData = await tokenResponse.json();
 
-    if (tokenData.error) {
-      console.error('Token Exchange Error:', tokenData);
-      return res.status(400).json({ error: 'Token exchange failed', details: tokenData.error_description });
+    if (!tokenResponse.ok) {
+      console.error('Token exchange failed:', tokenData);
+      return res.status(400).json({ error: 'Token exchange failed' });
     }
 
     const userInfoResponse = await fetch(process.env.USERINFO_ENDPOINT, {
-      headers: { Authorization: `Bearer ${tokenData.access_token}` },
+      headers: {
+        'Authorization': `Bearer ${tokenData.access_token}`,
+      },
     });
-
-    if (!userInfoResponse.ok) {
-      return res.status(userInfoResponse.status).json({ error: 'Failed to fetch user info' });
-    }
 
     const userInfo = await userInfoResponse.json();
-    req.session.user = userInfo;
 
-    if (!db.users[userInfo.sub]) {
-        db.users[userInfo.sub] = { role: 'patient', allergies: [], prescriptions: [], consultations: [], personalData: { ...userInfo } };
+    if (!userInfoResponse.ok) {
+      console.error('User info fetch failed:', userInfo);
+      return res.status(400).json({ error: 'Failed to fetch user info' });
     }
 
-    res.json({ success: true, user: userInfo });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// --- Health Check and General Endpoints ---
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    version: db.metadata.version,
-    environment: process.env.NODE_ENV || 'development'
-  });
-});
-
-app.get('/api/auth/session', (req, res) => {
-  if (req.session.user) {
-    res.json({ 
-      authenticated: true, 
-      user: {
-        id: req.session.user.sub,
-        role: db.users[req.session.user.sub]?.role || 'patient',
-        ...req.session.user
-      }
+    res.json({
+      accessToken: tokenData.access_token,
+      user: userInfo
     });
-  } else {
-    res.json({ authenticated: false });
+
+  } catch (error) {
+    console.error('Callback error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.post('/api/auth/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).json({ error: 'Failed to logout' });
-    }
-    res.clearCookie('hakim.sid');
-    res.json({ success: true, message: 'Logged out successfully' });
-  });
-});
-
-
-// --- AI & Patient Endpoints ---
-const authMiddleware = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-  next();
-};
-
-app.post('/api/patient/ask', authMiddleware, async (req, res, next) => {
+// --- Chat Routes ---
+app.post('/api/chat', async (req, res) => {
   try {
-    const { question } = req.body;
-    if (!question) {
-      return res.status(400).json({ error: 'Question is required.' });
+    const { message, userId, userRole } = req.body;
+
+    if (!message) {
+      return res.status(400).json({ error: 'Message is required' });
     }
 
-    const patient = db.users[req.session.user.sub];
-    if (!patient) {
-      return res.status(404).json({ error: 'Patient data not found.' });
+    // Check if OpenAI is available
+    if (!openai) {
+      return res.status(503).json({
+        error: 'Chat service unavailable',
+        message: 'AI chat feature is not configured. Please set OPENAI_API_KEY environment variable.'
+      });
     }
 
-    const patientContext = `
-      Patient Information:
-      - Allergies: ${patient.allergies.length ? patient.allergies.join(', ') : 'None recorded'}.
-      - Prescriptions: ${patient.prescriptions.length ? patient.prescriptions.map(p => `${p.medication} (${p.dosage})`).join('; ') : 'None recorded'}.
-      - Recent Consultations: ${patient.consultations.length ? patient.consultations.map(c => `${c.diagnosis} on ${new Date(c.consultedAt).toLocaleDateString()}`).join('; ') : 'None recorded'}.
-    `;
+    const systemPrompt = `You are Hakim AI, a medical assistant. You help patients, doctors, and hospital administrators with healthcare-related questions. 
+    
+    Current user role: ${userRole || 'patient'}
+    User ID: ${userId || 'unknown'}
+    
+    Please provide helpful, accurate, and safe medical information. Always remind users to consult with healthcare professionals for serious medical concerns.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
-        {
-          role: "system",
-          content: `You are Hakim AI, a helpful and secure medical AI assistant. Your role is to answer patient questions based *only* on the medical information provided to you. Do not invent or infer any information. Do not provide any medical advice. If the user asks something you cannot answer from the provided data, politely state that you do not have that information. Frame your answers clearly and simply.`
-        },
-        {
-          role: "user",
-          content: `Patient's Data:\n${patientContext}\n\nPatient's Question: "${question}"`
-        }
+        { role: "system", content: systemPrompt },
+        { role: "user", content: message }
       ],
-      temperature: 0.2,
-      max_tokens: 200,
+      max_tokens: 500,
+      temperature: 0.7,
     });
 
-    const answer = completion.choices[0].message.content;
-    res.json({ answer });
+    const response = completion.choices[0].message.content;
 
-  } catch (error) {
-    console.error('OpenAI API Error:', error);
-    next(error);
-  }
-});
-
-app.post('/api/patient/allergy', authMiddleware, (req, res) => {
-    const { allergy } = req.body;
-    if (!allergy) return res.status(400).json({ error: 'Allergy is required' });
-    const patientId = req.session.user.sub;
-    if (!db.users[patientId]) db.users[patientId] = { role: 'patient', allergies: [], prescriptions: [] };
-    db.users[patientId].allergies.push(allergy);
-    res.status(201).json({ message: 'Allergy added successfully.', allergies: db.users[patientId].allergies });
-});
-
-// --- Healthcare Professional Endpoints ---
-app.get('/api/professional/patients', authMiddleware, (req, res) => {
-  try {
-    const patients = [];
-    for (const [patientId, patientData] of Object.entries(db.users)) {
-      if (patientData.role === 'patient') {
-        patients.push({
-          id: patientId,
-          ...patientData
-        });
-      }
-    }
-    res.json({ patients });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch patients' });
-  }
-});
-
-app.get('/api/professional/patient/:patientId', authMiddleware, (req, res) => {
-  try {
-    const { patientId } = req.params;
-    const patient = db.users[patientId];
-    if (!patient || patient.role !== 'patient') {
-      return res.status(404).json({ error: 'Patient not found' });
-    }
-    res.json({ patient });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch patient details' });
-  }
-});
-
-app.post('/api/professional/prescription', authMiddleware, (req, res) => {
-  try {
-    const { patientId, prescription, medication, dosage, instructions } = req.body;
-    const professionalId = req.session.user.sub;
-    
-    if (!patientId || !prescription) {
-      return res.status(400).json({ error: 'Patient ID and prescription are required' });
-    }
-    
-    if (!db.users[patientId]) {
-      db.users[patientId] = { role: 'patient', allergies: [], prescriptions: [] };
-    }
-    
-    const prescriptionRecord = {
-      id: Date.now().toString(),
-      prescription,
-      medication: medication || prescription,
-      dosage: dosage || 'As directed',
-      instructions: instructions || 'Take as prescribed',
-      prescribedBy: professionalId,
-      prescribedAt: new Date().toISOString(),
-      status: 'active'
-    };
-    
-    db.users[patientId].prescriptions.push(prescriptionRecord);
-    
-    res.status(201).json({ 
-      message: 'Prescription added successfully for patient ' + patientId,
-      prescription: prescriptionRecord
+    res.json({
+      message: response,
+      timestamp: new Date().toISOString()
     });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to add prescription' });
-  }
-});
 
-app.post('/api/professional/consultation', authMiddleware, (req, res) => {
-  try {
-    const { patientId, diagnosis, notes, type = 'general' } = req.body;
-    const professionalId = req.session.user.sub;
-    
-    if (!patientId || !diagnosis) {
-      return res.status(400).json({ error: 'Patient ID and diagnosis are required' });
-    }
-    
-    if (!db.users[patientId]) {
-      db.users[patientId] = { role: 'patient', allergies: [], prescriptions: [], consultations: [] };
-    }
-    
-    if (!db.users[patientId].consultations) {
-      db.users[patientId].consultations = [];
-    }
-    
-    const consultationRecord = {
-      id: Date.now().toString(),
-      type,
-      diagnosis,
-      notes: notes || '',
-      consultedBy: professionalId,
-      consultedAt: new Date().toISOString(),
-      status: 'completed'
-    };
-    
-    db.users[patientId].consultations.push(consultationRecord);
-    
-    res.status(201).json({ 
-      message: 'Consultation recorded successfully',
-      consultation: consultationRecord
+  } catch (error) {
+    console.error('Chat error:', error);
+    res.status(500).json({
+      error: 'Failed to process chat message',
+      message: 'An error occurred while processing your message'
     });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to record consultation' });
   }
 });
 
-app.get('/api/professional/stats', authMiddleware, (req, res) => {
-  try {
-    const totalPatients = Object.values(db.users).filter(user => user.role === 'patient').length;
-    const stats = {
-      totalPatients,
-      consultationsToday: Math.floor(Math.random() * 10) + 1,
-      emergencyCases: Math.floor(Math.random() * 3),
-      pendingReports: Math.floor(Math.random() * 5) + 1,
-      averageRating: (4.5 + Math.random() * 0.5).toFixed(1),
-      yearsExperience: Math.floor(Math.random() * 15) + 5
-    };
-    res.json({ stats });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch statistics' });
-  }
-});
-
-
-// --- Central Error Handler ---
+// --- Error Handling Middleware ---
 app.use((err, req, res, next) => {
-  console.error('Unhandled Error:', err);
-  res.status(500).json({ error: 'Internal Server Error', message: err.message });
+  console.error('Unhandled error:', err);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'production' 
+      ? 'Something went wrong' 
+      : err.message
+  });
 });
 
-// --- Server Start ---
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Backend server is running on http://localhost:${PORT}`);
-  console.log(`Health check available at http://localhost:${PORT}/api/health`);
+// --- 404 Handler ---
+app.use('*', (req, res) => {
+  res.status(404).json({
+    error: 'Route not found',
+    message: `The requested route ${req.originalUrl} does not exist`
+  });
 });
+
+// --- Server Startup ---
+const PORT = process.env.PORT || 5000;
+
+const startServer = async () => {
+  try {
+    // Test database connection
+    const dbConnected = await testConnection();
+    if (!dbConnected) {
+      console.error('❌ Failed to connect to database. Server will start but some features may not work.');
+    }
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`📊 Health check available at http://localhost:${PORT}/health`);
+      console.log(`🔗 API documentation available at http://localhost:${PORT}/api`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
+
+export default app;
 

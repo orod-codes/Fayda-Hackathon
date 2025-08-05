@@ -13,9 +13,12 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/contexts/AuthContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+
+export const dynamic = 'force-dynamic';
 
 export default function PatientLoginPage() {
-  const { translations } = useLanguage();
+  const { translations, language } = useLanguage();
   const { theme } = useTheme();
   const { login } = useAuth();
   const router = useRouter();
@@ -45,11 +48,11 @@ export default function PatientLoginPage() {
       display: 'page',
       nonce: 'g4DEuje5Fx57Vb64dO4oqLHXGT8L8G7g',
       state: 'ptOO76SD',
-      ui_locales: 'en',
+      ui_locales: language,
     });
 
     return `https://esignet.ida.fayda.et/authorize?${params.toString()}`;
-  }, []);
+  }, [language]);
 
   const handlePhoneVerification = () => {
     setIsLoading(true);
@@ -98,26 +101,31 @@ export default function PatientLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background text-foreground">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-black dark:text-white">
       <div className="w-full max-w-md">
+        {/* Language Switcher */}
+        <div className="flex justify-end mb-4">
+          <LanguageSwitcher variant="compact" />
+        </div>
+
         <div className="flex items-center justify-between mb-6">
-          <Button variant="ghost" onClick={() => router.push('/')}>
+          <Button variant="ghost" onClick={() => router.push('/')} className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors duration-200">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            {translations.back}
           </Button>
           <ThemeToggle />
         </div>
 
-        <Card>
+        <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
                 <Image src="/images/hakim-ai-logo.png" alt="hakim-ai Logo" width={24} height={24} />
               </div>
               <div>
-                <CardTitle className="text-2xl">Patient Login</CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  Complete your registration and authentication
+                <CardTitle className="text-2xl text-black dark:text-white">{translations.patientLogin}</CardTitle>
+                <CardDescription className="text-gray-600 dark:text-gray-400">
+                  {translations.completeRegistration}
                 </CardDescription>
               </div>
             </div>
@@ -130,71 +138,65 @@ export default function PatientLoginPage() {
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto">
                     <Phone className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold">Welcome to Hakim AI</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Let's get you started with your health journey
+                  <h3 className="text-lg font-semibold text-black dark:text-white">{translations.welcome}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {translations.healthAssistant}
                   </p>
                 </div>
                 <Button
                   onClick={handlePhoneVerification}
                   disabled={isLoading}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                  className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200"
                 >
-                  {isLoading ? 'Starting...' : 'Get Started'}
+                  {isLoading ? translations.starting : translations.getStarted}
                 </Button>
-
-                <div className="text-center text-sm text-gray-500">or</div>
-
-                <a href={loginUrl} className="w-full block">
-                  <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white">Sign In with Fayda</Button>
-                </a>
               </div>
             )}
 
             {step === 2 && (
               <div className="space-y-4">
                 <div>
-                  <Label>Create Password</Label>
+                  <Label className="text-black dark:text-white">{translations.createPassword}</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                     <Input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Create a strong password"
-                      className="pl-10"
+                      placeholder={translations.createStrongPassword}
+                      className="pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-200"
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-0 top-0 h-full px-3"
+                      className="absolute right-0 top-0 h-full px-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
                   </div>
-                  <p className="text-xs mt-1 text-muted-foreground">
-                    Must be at least 8 characters long
+                  <p className="text-xs mt-1 text-gray-600 dark:text-gray-400">
+                    {translations.passwordRequirements}
                   </p>
                 </div>
 
                 <div>
-                  <Label>Confirm Password</Label>
+                  <Label className="text-black dark:text-white">{translations.confirmPassword}</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                     <Input
                       type={showConfirmPassword ? 'text' : 'password'}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Confirm your password"
-                      className="pl-10"
+                      placeholder={translations.confirmYourPassword}
+                      className="pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-200"
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-0 top-0 h-full px-3"
+                      className="absolute right-0 top-0 h-full px-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -205,9 +207,9 @@ export default function PatientLoginPage() {
                 <Button
                   onClick={handlePasswordCreation}
                   disabled={isLoading || !password || !confirmPassword}
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                  className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200"
                 >
-                  {isLoading ? 'Creating Account...' : 'Create Account'}
+                  {isLoading ? translations.creatingAccount : translations.createPassword}
                 </Button>
               </div>
             )}
@@ -218,9 +220,9 @@ export default function PatientLoginPage() {
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto">
                     <Shield className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold">Sign In with Fayda</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Complete your authentication with Fayda ID to access your health data
+                  <h3 className="text-lg font-semibold text-black dark:text-white">{translations.signInWithFayda}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {translations.completeAuthentication}
                   </p>
                 </div>
 
@@ -230,9 +232,9 @@ export default function PatientLoginPage() {
                       <span className="text-white text-sm font-semibold">✓</span>
                     </div>
                     <div>
-                      <h4 className="font-medium text-green-900 dark:text-green-100">Claims Verification</h4>
+                      <h4 className="font-medium text-green-900 dark:text-green-100">{translations.claimsVerification}</h4>
                       <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-                        Make sure all your claims are verified and up to date. This ensures accurate health data retrieval and proper service delivery.
+                        {translations.claimsVerificationDesc}
                       </p>
                     </div>
                   </div>
@@ -249,8 +251,8 @@ export default function PatientLoginPage() {
                 </div>
 
                 <a href={loginUrl} className="w-full block">
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                    {isLoading ? 'Connecting to Fayda...' : 'Verification with Fayda'}
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200">
+                    {isLoading ? translations.connectingToFayda : translations.verificationWithFayda}
                   </Button>
                 </a>
               </div>
@@ -259,33 +261,33 @@ export default function PatientLoginPage() {
         </Card>
 
         <div className="mt-6 text-center">
-          <div className="bg-card/30 border border-border rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Registration Steps</h3>
+          <div className="bg-white/30 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+            <h3 className="font-semibold mb-2 text-black dark:text-white">{translations.registrationSteps}</h3>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
-                <Badge className={step >= 1 ? 'bg-blue-500' : 'bg-muted'}>1</Badge>
-                <span className="text-sm text-muted-foreground">Welcome & Get Started</span>
+                <Badge className={step >= 1 ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}>1</Badge>
+                <span className="text-sm text-gray-600 dark:text-gray-400">{translations.welcomeGetStarted}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Badge className={step >= 2 ? 'bg-blue-500' : 'bg-muted'}>2</Badge>
-                <span className="text-sm text-muted-foreground">Create password</span>
+                <Badge className={step >= 2 ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}>2</Badge>
+                <span className="text-sm text-gray-600 dark:text-gray-400">{translations.createPasswordStep}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Badge className={step >= 3 ? 'bg-blue-500' : 'bg-muted'}>3</Badge>
-                <span className="text-sm text-muted-foreground">Sign In with Fayda</span>
+                <Badge className={step >= 3 ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}>3</Badge>
+                <span className="text-sm text-gray-600 dark:text-gray-400">{translations.signInFaydaStep}</span>
               </div>
             </div>
           </div>
 
           {/* ✅ Moved this inside the same layout block */}
           <div className="mt-4 text-center">
-            <p className="text-sm text-muted-foreground">
-              Already have an account?{' '}
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {translations.alreadyHaveAccount}{' '}
               <button
                 onClick={() => router.push('/patient/logging')}
-                className="text-blue-600 hover:underline font-medium"
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors duration-200"
               >
-                Log in here
+                {translations.logInHere}
               </button>
             </p>
           </div>

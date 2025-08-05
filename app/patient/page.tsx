@@ -15,6 +15,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import {
   MessageSquare,
   User,
@@ -81,6 +82,8 @@ const initialMedications: Medication[] = [
   }
 ];
 
+export const dynamic = 'force-dynamic';
+
 export default function PatientPage() {
   
     const { user, logout } = useAuth();
@@ -89,7 +92,7 @@ export default function PatientPage() {
   // All hooks go here, before any return!
   const [medications, setMedications] = useState<Medication[]>(initialMedications);
   const { translations, language } = useLanguage();
-  const [users, setUsers] = useState(null);
+  const [users, setUsers] = useState<{ name?: string; email?: string } | null>(null);
 
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('overview');
@@ -282,28 +285,29 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
   return (
 	
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-zinc-900 text-zinc-100' : 'bg-slate-50 text-zinc-900'}`}>
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 via-white to-blue-100 text-black'}`}>
       {/* Header */}
 	 {notification && (
-        <div className="fixed top-4 right-4 bg-sky-500 text-white px-4 py-2 rounded shadow-lg z-50">
+        <div className="fixed top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow-lg z-50">
           {notification}
         </div>
       )}
-      <header className={`border-b px-4 py-4 ${theme === 'dark' ? 'border-zinc-800' : 'border-zinc-200'}`}>
+      <header className={`border-b px-4 py-4 ${theme === 'dark' ? 'border-gray-700 bg-gray-800/50' : 'border-gray-200 bg-white/50'}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <Button variant="ghost" onClick={() => router.push('/')}>
+            <Button variant="ghost" onClick={() => router.push('/')} className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors duration-200">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Button>
             <Image src="/images/hakmin-logo.png" alt="Hakmin Logo" width={32} height={32} />
-            <span className="text-xl font-semibold text-sky-400">Patient Dashboard</span>
+            <span className="text-xl font-semibold text-blue-600 dark:text-blue-400">Patient Dashboard</span>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
+            <LanguageSwitcher variant="compact" />
+            <Button variant="ghost" size="sm" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors duration-200">
               <Bell className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors duration-200">
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
@@ -311,12 +315,12 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       </header>
 
       {/* Emergency Alert */}
-      <div className="bg-red-500/10 border-l-4 border-red-500 p-4">
+      <div className="bg-red-100 dark:bg-red-900/30 border-l-4 border-red-500 p-4">
         <div className="flex items-center">
-          <AlertTriangle className="h-5 w-5 text-red-400 mr-2" />
+          <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 mr-2" />
           <div>
-            <p className="text-red-300 font-semibold">Emergency Contacts</p>
-            <p className="text-red-400 text-sm">Ambulance: 911 | Police: 991 | Fire: 939</p>
+            <p className="text-red-800 dark:text-red-300 font-semibold">Emergency Contacts</p>
+            <p className="text-red-700 dark:text-red-400 text-sm">Ambulance: 911 | Police: 991 | Fire: 939</p>
           </div>
         </div>
       </div>
@@ -326,30 +330,30 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         <div className="flex space-x-6">
           {/* Sidebar */}
           <div className="w-64 flex-shrink-0">
-            <Card className="bg-zinc-800/50 border-zinc-700">
+            <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <Avatar>
-                      <AvatarFallback className="bg-blue-500 text-white">p</AvatarFallback>
+                      <AvatarFallback className="bg-blue-600 text-white">p</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium text-zinc-100">{users?.name}</p>
-                      <p className="text-sm text-zinc-400">{users?.email}</p>
+                      <p className="font-medium text-black dark:text-white">{users?.name}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{users?.email}</p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Button
                       variant={activeTab === 'overview' ? 'default' : 'ghost'}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className="w-full justify-start bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200"
                       onClick={() => setActiveTab('overview')}
                     >
                       Overview
                     </Button>
                     <Button
                       variant={activeTab === 'chat' ? 'default' : 'ghost'}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className="w-full justify-start bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200"
                       onClick={() => router.push('/chat')}
                     >
                       <MessageSquare className="h-4 w-4 mr-2" />
@@ -357,7 +361,7 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                     </Button>
                     <Button
                       variant={activeTab === 'history' ? 'default' : 'ghost'}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className="w-full justify-start bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200"
                       onClick={() => setActiveTab('history')}
                     >
                       <User className="h-4 w-4 mr-2" />
@@ -365,7 +369,7 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                     </Button>
                     <Button
                       variant={activeTab === 'medications' ? 'default' : 'ghost'}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className="w-full justify-start bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200"
                       onClick={() => setActiveTab('medications')}
                     >
                       <Pill className="h-4 w-4 mr-2" />
@@ -373,7 +377,7 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                     </Button>
                     <Button
                       variant={activeTab === 'documents' ? 'default' : 'ghost'}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className="w-full justify-start bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200"
                       onClick={() => setActiveTab('documents')}
                     >
                       <FileText className="h-4 w-4 mr-2" />
@@ -381,7 +385,7 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                     </Button>
                     <Button
                       variant={activeTab === 'consultations' ? 'default' : 'ghost'}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className="w-full justify-start bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200"
                       onClick={() => setActiveTab('consultations')}
                     >
                       <Video className="h-4 w-4 mr-2" />
@@ -399,21 +403,21 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             {activeTab === 'overview' && (
               <div className="space-y-6">
                 {/* ChatGPT Chat Banner */}
-                <Card className="bg-gradient-to-r from-sky-500/20 to-blue-500/20 border-sky-500/30">
+                <Card className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-blue-500/30 shadow-xl hover:shadow-2xl transition-shadow duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-sky-400 to-blue-600 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
                           <MessageSquare className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                          <h3 className="text-xl font-bold text-zinc-100">Chat with AI Health Assistant</h3>
-                          <p className="text-zinc-300">Get instant health advice and support from our AI assistant</p>
+                          <h3 className="text-xl font-bold text-black dark:text-white">Chat with AI Health Assistant</h3>
+                          <p className="text-gray-600 dark:text-gray-400">Get instant health advice and support from our AI assistant</p>
                         </div>
                       </div>
                       <Button
                         onClick={() => router.push('/chat')}
-                        className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-3"
+                        className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-3 transition-colors duration-200"
                       >
                         <MessageSquare className="h-4 w-4 mr-2" />
                         Start Chat
@@ -425,26 +429,26 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                 {/* Health Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 
-               <Card className="bg-zinc-800/50 border-zinc-700">
+               <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
   <CardContent className="p-6">
     <div className="flex items-center space-x-3">
-      <Pill className="h-8 w-8 text-blue-400" />
+      <Pill className="h-8 w-8 text-blue-500" />
       <div>
-        <p className="text-2xl font-bold text-zinc-100">
+        <p className="text-2xl font-bold text-black dark:text-white">
           {medications.filter(med => med.status === 'Active').length}
         </p>
-        <p className="text-sm text-zinc-400">Active Medications</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">Active Medications</p>
       </div>
     </div>
   </CardContent>
 </Card>
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
-                        <Calendar className="h-8 w-8 text-purple-400" />
+                        <Calendar className="h-8 w-8 text-purple-500" />
                         <div>
-                          <p className="text-2xl font-bold text-zinc-100">3</p>
-                          <p className="text-sm text-zinc-400">Upcoming Appointments</p>
+                          <p className="text-2xl font-bold text-black dark:text-white">3</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">Upcoming Appointments</p>
                         </div>
                       </div>
                     </CardContent>
@@ -454,61 +458,61 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                 {/* Quick Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <Card
-                    className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer"
+                    className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-2xl"
                     onClick={() => router.push('/chat')}
                   >
                     <CardContent className="p-6 text-center">
-                      <MessageSquare className="h-8 w-8 text-sky-400 mx-auto mb-3" />
-                      <h3 className="font-semibold text-zinc-100">Health Chat</h3>
-                      <p className="text-sm text-zinc-400">Chat with AI assistant</p>
+                      <MessageSquare className="h-8 w-8 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
+                      <h3 className="font-semibold text-black dark:text-white">Health Chat</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Chat with AI assistant</p>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer">
+                  <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-2xl">
                     <CardContent className="p-6 text-center">
-                      <Upload className="h-8 w-8 text-green-400 mx-auto mb-3" />
-                      <h3 className="font-semibold text-zinc-100">Upload Documents</h3>
-                      <p className="text-sm text-zinc-400">Share medical files</p>
+                      <Upload className="h-8 w-8 text-green-500 mx-auto mb-3" />
+                      <h3 className="font-semibold text-black dark:text-white">Upload Documents</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Share medical files</p>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer">
+                  <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-2xl">
                     <CardContent className="p-6 text-center">
-                      <Video className="h-8 w-8 text-purple-400 mx-auto mb-3" />
-                      <h3 className="font-semibold text-zinc-100">Video Consultation</h3>
-                      <p className="text-sm text-zinc-400">Schedule appointment</p>
+                      <Video className="h-8 w-8 text-purple-500 mx-auto mb-3" />
+                      <h3 className="font-semibold text-black dark:text-white">Video Consultation</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Schedule appointment</p>
                     </CardContent>
                   </Card>
 
                 </div>
 
                 {/* Recent Activity */}
-                <Card className="bg-zinc-800/50 border-zinc-700">
+                <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
                   <CardHeader>
-                    <CardTitle className="text-zinc-100">Recent Activity</CardTitle>
+                    <CardTitle className="text-black dark:text-white">Recent Activity</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
+                      <div className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <MessageSquare className="h-4 w-4 text-sky-400" />
-                          <span className="text-zinc-100">Chat session completed</span>
+                          <MessageSquare className="h-4 w-4 text-blue-500" />
+                          <span className="text-black dark:text-white">Chat session completed</span>
                         </div>
-                        <span className="text-sm text-zinc-400">2 hours ago</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">2 hours ago</span>
                       </div>
-                      <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
+                      <div className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <Upload className="h-4 w-4 text-green-400" />
-                          <span className="text-zinc-100">Medical document uploaded</span>
+                          <Upload className="h-4 w-4 text-green-500" />
+                          <span className="text-black dark:text-white">Medical document uploaded</span>
                         </div>
-                        <span className="text-sm text-zinc-400">1 day ago</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">1 day ago</span>
                       </div>
-                      <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
+                      <div className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <Pill className="h-4 w-4 text-purple-400" />
-                          <span className="text-zinc-100">Medication reminder set</span>
+                          <Pill className="h-4 w-4 text-purple-500" />
+                          <span className="text-black dark:text-white">Medication reminder set</span>
                         </div>
-                        <span className="text-sm text-zinc-400">2 days ago</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">2 days ago</span>
                       </div>
                     </div>
                   </CardContent>
@@ -518,21 +522,21 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
             {activeTab === 'history' && (
               <div className="space-y-6">
-                <Card className="bg-zinc-800/50 border-zinc-700">
+                <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
                   <CardHeader>
-                    <CardTitle className="text-zinc-100">Medical History</CardTitle>
-                    <CardDescription className="text-zinc-400">
+                    <CardTitle className="text-black dark:text-white">Medical History</CardTitle>
+                    <CardDescription className="text-gray-600 dark:text-gray-400">
                       Your complete medical records from all hospitals
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       {medicalHistory.map((record) => (
-                        <div key={record.id} className="border border-zinc-700 rounded-lg p-4">
+                        <div key={record.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                           <div className="flex justify-between items-start mb-3">
                             <div>
-                              <h3 className="font-semibold text-zinc-100">{record.diagnosis}</h3>
-                              <p className="text-sm text-zinc-400">
+                              <h3 className="font-semibold text-black dark:text-white">{record.diagnosis}</h3>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
                                 {record.doctor} - {record.hospital}
                               </p>
                             </div>
@@ -540,12 +544,12 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                           </div>
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                              <span className="text-zinc-400">Date:</span>
-                              <span className="text-zinc-100 ml-2">{record.date}</span>
+                              <span className="text-gray-600 dark:text-gray-400">Date:</span>
+                              <span className="text-black dark:text-white ml-2">{record.date}</span>
                             </div>
                             <div>
-                              <span className="text-zinc-400">Treatment:</span>
-                              <span className="text-zinc-100 ml-2">{record.treatment}</span>
+                              <span className="text-gray-600 dark:text-gray-400">Treatment:</span>
+                              <span className="text-black dark:text-white ml-2">{record.treatment}</span>
                             </div>
                           </div>
                         </div>
@@ -558,10 +562,10 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
   {activeTab === 'medications' && (
   <div className="space-y-6">
-    <Card className="bg-zinc-900/60 border border-zinc-700 shadow-lg rounded-2xl">
+    <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300 rounded-2xl">
       <CardHeader className="pb-2">
-        <CardTitle className="text-zinc-100 text-xl">Medication Management</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-black dark:text-white text-xl">Medication Management</CardTitle>
+        <CardDescription className="text-gray-600 dark:text-gray-400">
           Smart reminders and medication tracking powered by AI
         </CardDescription>
       </CardHeader>
@@ -573,20 +577,20 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 {medications.map((med) => (
   <div
     key={med.id}
-    className="border border-zinc-700 bg-zinc-800/50 rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between hover:border-sky-500 transition-all duration-300 mb-4"
+    className="border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-700/50 rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between hover:border-blue-500 transition-all duration-300 mb-4"
   >
     <div>
-      <h3 className="font-semibold text-lg text-white flex items-center gap-2">
-        <Pill className="h-5 w-5 text-sky-400" />
+      <h3 className="font-semibold text-lg text-black dark:text-white flex items-center gap-2">
+        <Pill className="h-5 w-5 text-blue-500" />
         {med.name}
       </h3>
-      <p className="text-sm text-zinc-400">
+      <p className="text-sm text-gray-600 dark:text-gray-400">
         {med.dosage} &bull; {med.frequency}
       </p>
-      <div className="flex items-center text-sm text-zinc-400 gap-2 mt-1">
+      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 gap-2 mt-1">
         <Clock className="h-4 w-4" />
         Reminder:
-        <span className="text-zinc-100 font-medium">{med.time}</span>
+        <span className="text-black dark:text-white font-medium">{med.time}</span>
       </div>
     </div>
     <div className="flex flex-col items-end gap-2 mt-4 md:mt-0">
@@ -598,7 +602,7 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       </Badge>
       {med.status !== 'Completed' && (
         <Button
-          className="bg-sky-600 hover:bg-sky-700 text-white text-sm shadow-md"
+          className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-sm shadow-md transition-colors duration-200"
           size="sm"
           onClick={() => {
             setNotification(
@@ -621,16 +625,16 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
         {activeTab === 'documents' && (
               <div className="space-y-6">
-                <Card className="bg-zinc-800/50 border-zinc-700">
+                <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
                   <CardHeader>
-                    <CardTitle className="text-zinc-100">Medical Documents</CardTitle>
-                    <CardDescription className="text-zinc-400">
+                    <CardTitle className="text-black dark:text-white">Medical Documents</CardTitle>
+                    <CardDescription className="text-gray-600 dark:text-gray-400">
                       Upload and manage your medical documents
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      <div className="border-2 border-dashed border-zinc-600 rounded-lg p-8 text-center">
+                      <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
                      <>
   <input
     type="file"
@@ -641,27 +645,27 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   />
 
   <Card
-    className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer"
+    className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-2xl"
     onClick={handleUploadClick}
   >
     <CardContent className="p-6 text-center">
-      <Upload className="h-8 w-8 text-green-400 mx-auto mb-3" />
-      <h3 className="font-semibold text-zinc-100">Upload Documents</h3>
-      <p className="text-sm text-zinc-400">Share medical files</p>
+      <Upload className="h-8 w-8 text-green-500 mx-auto mb-3" />
+      <h3 className="font-semibold text-black dark:text-white">Upload Documents</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">Share medical files</p>
     </CardContent>
   </Card>
 
   {/* Preview Uploaded Files */}
   {uploadedFiles.map((file, index) => (
-    <Card key={index} className="bg-zinc-800/50 border-zinc-700">
+    <Card key={index} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
       <CardContent className="p-4 space-y-2">
-        <p className="text-zinc-100 text-sm font-medium">{file.name}</p>
-        <p className="text-zinc-400 text-xs">{(file.size / 1024).toFixed(2)} KB</p>
+        <p className="text-black dark:text-white text-sm font-medium">{file.name}</p>
+        <p className="text-gray-600 dark:text-gray-400 text-xs">{(file.size / 1024).toFixed(2)} KB</p>
         {file.type.startsWith('image/') && (
           <img
             src={URL.createObjectURL(file)}
             alt={file.name}
-            className="rounded max-h-48 object-contain border border-zinc-700"
+            className="rounded max-h-48 object-contain border border-gray-200 dark:border-gray-700"
           />
         )}
       </CardContent>
@@ -677,10 +681,10 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             )}
 {activeTab === 'consultations' && (
   <div className="space-y-6">
-    <Card className="bg-zinc-800/50 border-zinc-700">
+    <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
       <CardHeader>
-        <CardTitle className="text-zinc-100">Video Consultations</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-black dark:text-white">Video Consultations</CardTitle>
+        <CardDescription className="text-gray-600 dark:text-gray-400">
           Select a hospital and doctor to begin a consultation.
         </CardDescription>
       </CardHeader>
@@ -692,14 +696,14 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
               key={record.hospital}
               className={`cursor-pointer p-4 border ${
                 record.hospital === selectedHospital
-                  ? 'border-sky-500 bg-sky-900/20'
-                  : 'border-zinc-700 bg-zinc-800/50'
-              }`}
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                  : 'border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80'
+              } shadow-xl hover:shadow-2xl transition-all duration-300`}
               onClick={() => setSelectedHospital(record.hospital)}
             >
               <div>
-                <h3 className="text-lg font-semibold text-zinc-100">{record.hospital}</h3>
-                <p className="text-sm text-zinc-400">Visited on {record.date}</p>
+                <h3 className="text-lg font-semibold text-black dark:text-white">{record.hospital}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Visited on {record.date}</p>
               </div>
             </Card>
           ))}
@@ -708,11 +712,11 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         {/* Doctor Dropdown */}
         {selectedHospital && (
           <div className="space-y-4">
-            <label className="block text-sm font-medium text-zinc-400">Choose a Doctor</label>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-400">Choose a Doctor</label>
             <select
               value={selectedDoctor}
               onChange={(e) => setSelectedDoctor(e.target.value)}
-              className="w-full p-2 bg-zinc-800 border border-zinc-600 rounded-md text-zinc-100"
+              className="w-full p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-black dark:text-white focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-200"
             >
               <option value="">Select Doctor</option>
           {doctorsByHospital[selectedHospital]?.map((doc, idx) => (
@@ -743,7 +747,7 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       })
     });
   }}
-  className="bg-sky-500 hover:bg-sky-600 w-full"
+  className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 w-full transition-colors duration-200"
 >
 
               <Video className="h-4 w-4 mr-2" />
@@ -756,7 +760,7 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         {showVideo && (
           <div className="pt-6">
           <iframe
-  className="h-96 w-full border border-zinc-600 rounded-lg"
+  className="h-96 w-full border border-gray-200 dark:border-gray-700 rounded-lg"
   src={`https://meet.jit.si/${meetingName}`}
   allow="camera; microphone"
 />
@@ -771,22 +775,22 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
             {activeTab === 'devices' && (
               <div className="space-y-6">
-                <Card className="bg-zinc-800/50 border-zinc-700">
+                <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
                   <CardHeader>
-                    <CardTitle className="text-zinc-100">Health Devices</CardTitle>
-                    <CardDescription className="text-zinc-400">
+                    <CardTitle className="text-black dark:text-white">Health Devices</CardTitle>
+                    <CardDescription className="text-gray-600 dark:text-gray-400">
                       Connect and manage wearable health devices
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      <div className="border border-zinc-700 rounded-lg p-4">
+                      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
-                            <Watch className="h-6 w-6 text-blue-400" />
+                            <Watch className="h-6 w-6 text-blue-500" />
                             <div>
-                              <h3 className="font-semibold text-zinc-100">Smart Watch</h3>
-                              <p className="text-sm text-zinc-400">Heart rate, steps, sleep tracking</p>
+                              <h3 className="font-semibold text-black dark:text-white">Smart Watch</h3>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">Heart rate, steps, sleep tracking</p>
                             </div>
                           </div>
                           <Badge variant="secondary">Connected</Badge>

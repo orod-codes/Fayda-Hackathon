@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { useRouter } from "next/navigation"
 import ProtectedRoute from "@/components/ProtectedRoute"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
 import AddDoctorForm from "@/components/AddDoctorForm"
 import ViewDoctorForm from "@/components/ViewDoctorForm"
 import EditDoctorForm from "@/components/EditDoctorForm"
@@ -48,6 +49,8 @@ import {
   User
 } from "lucide-react"
 import Image from "next/image"
+
+export const dynamic = 'force-dynamic';
 
 export default function HospitalAdminPage() {
   const { translations, language } = useLanguage()
@@ -244,11 +247,11 @@ export default function HospitalAdminPage() {
   return (
     <ProtectedRoute allowedRoles={["hospital-admin"]} loginRoute="/hospital-admin/login">
       <div className={`min-h-screen ${
-        theme === 'dark' ? 'bg-zinc-900 text-zinc-100' : 'bg-slate-50 text-zinc-900'
+        theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-black'
       }`}>
       {/* Header */}
       <header className={`border-b px-4 py-4 ${
-        theme === 'dark' ? 'border-zinc-800' : 'border-zinc-200'
+        theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
       }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -260,6 +263,7 @@ export default function HospitalAdminPage() {
             <span className="text-xl font-semibold text-sky-400">Hospital Admin Dashboard</span>
           </div>
           <div className="flex items-center space-x-4">
+            <LanguageSwitcher variant="compact" />
             <ThemeToggle />
             <Button variant="ghost" size="sm">
               <Settings className="h-4 w-4" />
@@ -276,7 +280,9 @@ export default function HospitalAdminPage() {
         <div className="flex space-x-6">
           {/* Sidebar */}
           <div className="w-64 flex-shrink-0">
-            <Card className="bg-zinc-800/50 border-zinc-700">
+            <Card className={`${
+              theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            } hover:shadow-lg transition-all duration-300`}>
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
@@ -284,22 +290,38 @@ export default function HospitalAdminPage() {
                       <AvatarFallback className="bg-blue-500 text-white">HA</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium text-zinc-100">Hospital Admin</p>
-                      <p className="text-sm text-zinc-400">Tikur Anbessa Hospital</p>
+                      <p className={`font-medium ${
+                        theme === 'dark' ? 'text-gray-100' : 'text-black'
+                      }`}>Hospital Admin</p>
+                      <p className={`text-sm ${
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                      }`}>Tikur Anbessa Hospital</p>
                     </div>
                   </div>
                   
                   <div className="space-y-2">
                     <Button 
                       variant={activeTab === "overview" ? "default" : "ghost"}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className={`w-full justify-start ${
+                        activeTab === "overview" 
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          : theme === 'dark' 
+                            ? 'text-gray-300 hover:bg-gray-700' 
+                            : 'text-gray-700 hover:bg-gray-100'
+                      }`}
                       onClick={() => setActiveTab("overview")}
                     >
                       Overview
                     </Button>
                     <Button 
                       variant={activeTab === "doctors" ? "default" : "ghost"}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className={`w-full justify-start ${
+                        activeTab === "doctors" 
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          : theme === 'dark' 
+                            ? 'text-gray-300 hover:bg-gray-700' 
+                            : 'text-gray-700 hover:bg-gray-100'
+                      }`}
                       onClick={() => setActiveTab("doctors")}
                     >
                       <Users className="h-4 w-4 mr-2" />
@@ -307,7 +329,13 @@ export default function HospitalAdminPage() {
                     </Button>
                     <Button 
                       variant={activeTab === "analytics" ? "default" : "ghost"}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className={`w-full justify-start ${
+                        activeTab === "analytics" 
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          : theme === 'dark' 
+                            ? 'text-gray-300 hover:bg-gray-700' 
+                            : 'text-gray-700 hover:bg-gray-100'
+                      }`}
                       onClick={() => setActiveTab("analytics")}
                     >
                       <BarChart3 className="h-4 w-4 mr-2" />
@@ -315,7 +343,13 @@ export default function HospitalAdminPage() {
                     </Button>
                     <Button 
                       variant={activeTab === "activity" ? "default" : "ghost"}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className={`w-full justify-start ${
+                        activeTab === "activity" 
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          : theme === 'dark' 
+                            ? 'text-gray-300 hover:bg-gray-700' 
+                            : 'text-gray-700 hover:bg-gray-100'
+                      }`}
                       onClick={() => setActiveTab("activity")}
                     >
                       <Activity className="h-4 w-4 mr-2" />
@@ -323,7 +357,13 @@ export default function HospitalAdminPage() {
                     </Button>
                     <Button 
                       variant={activeTab === "patients" ? "default" : "ghost"}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className={`w-full justify-start ${
+                        activeTab === "patients" 
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          : theme === 'dark' 
+                            ? 'text-gray-300 hover:bg-gray-700' 
+                            : 'text-gray-700 hover:bg-gray-100'
+                      }`}
                       onClick={() => setActiveTab("patients")}
                     >
                       <User className="h-4 w-4 mr-2" />
@@ -331,7 +371,13 @@ export default function HospitalAdminPage() {
                     </Button>
                     <Button 
                       variant={activeTab === "settings" ? "default" : "ghost"}
-                      className="w-full justify-start bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                      className={`w-full justify-start ${
+                        activeTab === "settings" 
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          : theme === 'dark' 
+                            ? 'text-gray-300 hover:bg-gray-700' 
+                            : 'text-gray-700 hover:bg-gray-100'
+                      }`}
                       onClick={() => setActiveTab("settings")}
                     >
                       <Settings className="h-4 w-4 mr-2" />
@@ -349,46 +395,70 @@ export default function HospitalAdminPage() {
               <div className="space-y-6">
                 {/* Hospital Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
                         <Users className="h-8 w-8 text-blue-400" />
                         <div>
-                          <p className="text-2xl font-bold text-zinc-100">{hospitalStats.totalPatients}</p>
-                          <p className="text-sm text-zinc-400">Total Patients</p>
+                          <p className={`text-2xl font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{hospitalStats.totalPatients}</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>Total Patients</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
                         <Stethoscope className="h-8 w-8 text-green-400" />
                         <div>
-                          <p className="text-2xl font-bold text-zinc-100">{hospitalStats.activeDoctors}</p>
-                          <p className="text-sm text-zinc-400">Active Doctors</p>
+                          <p className={`text-2xl font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{hospitalStats.activeDoctors}</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>Active Doctors</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
                         <Activity className="h-8 w-8 text-purple-400" />
                         <div>
-                          <p className="text-2xl font-bold text-zinc-100">{hospitalStats.todayConsultations}</p>
-                          <p className="text-sm text-zinc-400">Today's Consultations</p>
+                          <p className={`text-2xl font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{hospitalStats.todayConsultations}</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>Today's Consultations</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
                         <AlertTriangle className="h-8 w-8 text-red-400" />
                         <div>
-                          <p className="text-2xl font-bold text-zinc-100">{hospitalStats.emergencyCases}</p>
-                          <p className="text-sm text-zinc-400">Emergency Cases</p>
+                          <p className={`text-2xl font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{hospitalStats.emergencyCases}</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>Emergency Cases</p>
                         </div>
                       </div>
                     </CardContent>
@@ -397,23 +467,35 @@ export default function HospitalAdminPage() {
 
                 {/* Additional Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-zinc-400">Total Revenue</p>
-                          <p className="text-2xl font-bold text-zinc-100">{hospitalStats.totalRevenue}</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>Total Revenue</p>
+                          <p className={`text-2xl font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{hospitalStats.totalRevenue}</p>
                         </div>
                         <TrendingUp className="h-8 w-8 text-green-400" />
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-zinc-400">Patient Satisfaction</p>
-                          <p className="text-2xl font-bold text-zinc-100">{hospitalStats.patientSatisfaction}</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>Patient Satisfaction</p>
+                          <p className={`text-2xl font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{hospitalStats.patientSatisfaction}</p>
                         </div>
                         <CheckCircle className="h-8 w-8 text-blue-400" />
                       </div>
@@ -424,60 +506,84 @@ export default function HospitalAdminPage() {
                 {/* Quick Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <Card 
-                    className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer"
+                    className={`${
+                      theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    } hover:shadow-lg transition-all duration-300 cursor-pointer`}
                     onClick={() => setShowAddDoctorForm(true)}
                   >
                     <CardContent className="p-6 text-center">
                       <UserPlus className="h-8 w-8 text-blue-400 mx-auto mb-3" />
-                      <h3 className="font-semibold text-zinc-100">Add New Doctor</h3>
-                      <p className="text-sm text-zinc-400">Create doctor account</p>
+                      <h3 className={`font-semibold ${
+                        theme === 'dark' ? 'text-gray-100' : 'text-black'
+                      }`}>Add New Doctor</h3>
+                      <p className={`text-sm ${
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                      }`}>Create doctor account</p>
                     </CardContent>
                   </Card>
 
                   <Card 
-                    className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer"
+                    className={`${
+                      theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    } hover:shadow-lg transition-all duration-300 cursor-pointer`}
                     onClick={() => setActiveTab("analytics")}
                   >
                     <CardContent className="p-6 text-center">
                       <BarChart3 className="h-8 w-8 text-green-400 mx-auto mb-3" />
-                      <h3 className="font-semibold text-zinc-100">View Analytics</h3>
-                      <p className="text-sm text-zinc-400">Hospital statistics</p>
+                      <h3 className={`font-semibold ${
+                        theme === 'dark' ? 'text-gray-100' : 'text-black'
+                      }`}>View Analytics</h3>
+                      <p className={`text-sm ${
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                      }`}>Hospital statistics</p>
                     </CardContent>
                   </Card>
 
                   <Card 
-                    className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300 cursor-pointer"
+                    className={`${
+                      theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    } hover:shadow-lg transition-all duration-300 cursor-pointer`}
                     onClick={() => setActiveTab("activity")}
                   >
                     <CardContent className="p-6 text-center">
                       <Activity className="h-8 w-8 text-purple-400 mx-auto mb-3" />
-                      <h3 className="font-semibold text-zinc-100">Monitor Activity</h3>
-                      <p className="text-sm text-zinc-400">Track operations</p>
+                      <h3 className={`font-semibold ${
+                        theme === 'dark' ? 'text-gray-100' : 'text-black'
+                      }`}>Monitor Activity</h3>
+                      <p className={`text-sm ${
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                      }`}>Track operations</p>
                     </CardContent>
                   </Card>
                 </div>
 
                 {/* Recent Activity */}
-                <Card className="bg-zinc-800/50 border-zinc-700">
+                <Card className={`${
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                } hover:shadow-lg transition-all duration-300`}>
                   <CardHeader>
-                    <CardTitle className="text-zinc-100">Recent Activity</CardTitle>
+                    <CardTitle className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>Recent Activity</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       {recentActivity.map((activity) => (
-                        <div key={activity.id} className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
+                        <div key={activity.id} className={`flex items-center justify-between p-3 border ${
+                          theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+                        } rounded-lg`}>
                           <div className="flex items-center space-x-3">
                             {activity.type === "doctor_added" && <UserPlus className="h-4 w-4 text-green-400" />}
                             {activity.type === "emergency" && <AlertTriangle className="h-4 w-4 text-red-400" />}
                             {activity.type === "consultation" && <Activity className="h-4 w-4 text-blue-400" />}
-                            <span className="text-zinc-100">{activity.description}</span>
-                            {activity.doctor && <span className="text-zinc-400">- {activity.doctor}</span>}
+                            <span className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>{activity.description}</span>
+                            {activity.doctor && <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>- {activity.doctor}</span>}
                           </div>
                           <div className="flex items-center space-x-2">
                             <Badge variant={activity.status === "urgent" ? "destructive" : "secondary"}>
                               {activity.status}
                             </Badge>
-                            <span className="text-sm text-zinc-400">{activity.time}</span>
+                            <span className={`text-sm ${
+                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                            }`}>{activity.time}</span>
                           </div>
                         </div>
                       ))}
@@ -496,15 +602,19 @@ export default function HospitalAdminPage() {
                       placeholder="Search doctors..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-64 bg-zinc-700 border-zinc-600 text-zinc-100 placeholder:text-zinc-400"
+                      className={`w-64 ${
+                        theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400' 
+                          : 'bg-white border-gray-300 text-black placeholder:text-gray-500'
+                      } focus:border-blue-500 focus:ring-blue-500`}
                     />
-                    <Button className="bg-sky-500 hover:bg-sky-600">
+                    <Button className="bg-blue-600 hover:bg-blue-700">
                       <Search className="h-4 w-4 mr-2" />
                       Search
                     </Button>
                   </div>
                   <Button 
-                    className="bg-blue-500 hover:bg-blue-600"
+                    className="bg-blue-600 hover:bg-blue-700"
                     onClick={() => setShowAddDoctorForm(true)}
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
@@ -515,7 +625,9 @@ export default function HospitalAdminPage() {
                 {/* Doctors List */}
                 <div className="grid gap-4">
                   {filteredDoctors.map((doctor) => (
-                    <Card key={doctor.id} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300">
+                    <Card key={doctor.id} className={`${
+                      theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    } hover:shadow-lg transition-all duration-300`}>
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-4">
@@ -523,14 +635,20 @@ export default function HospitalAdminPage() {
                               <AvatarFallback>{doctor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                             </Avatar>
                             <div>
-                              <h3 className="font-semibold text-zinc-100">{doctor.name}</h3>
-                              <p className="text-sm text-zinc-400">{doctor.specialty}</p>
+                              <h3 className={`font-semibold ${
+                                theme === 'dark' ? 'text-gray-100' : 'text-black'
+                              }`}>{doctor.name}</h3>
+                              <p className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>{doctor.specialty}</p>
                               <div className="flex items-center space-x-4 mt-1">
-                                <span className="text-xs text-zinc-500">
+                                <span className={`text-xs ${
+                                  theme === 'dark' ? 'text-gray-500' : 'text-gray-500'
+                                }`}>
                                   <Phone className="h-3 w-3 inline mr-1" />
                                   {doctor.phone}
                                 </span>
-                                <span className="text-xs text-zinc-500">
+                                <span className={`text-xs ${
+                                  theme === 'dark' ? 'text-gray-500' : 'text-gray-500'
+                                }`}>
                                   <Mail className="h-3 w-3 inline mr-1" />
                                   {doctor.email}
                                 </span>
@@ -539,8 +657,12 @@ export default function HospitalAdminPage() {
                           </div>
                           <div className="flex items-center space-x-4">
                             <div className="text-right">
-                              <p className="text-sm font-medium text-zinc-100">{doctor.patients} patients</p>
-                              <p className="text-xs text-zinc-400">Last active: {doctor.lastActive}</p>
+                              <p className={`text-sm font-medium ${
+                                theme === 'dark' ? 'text-gray-100' : 'text-black'
+                              }`}>{doctor.patients} patients</p>
+                              <p className={`text-xs ${
+                                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                              }`}>Last active: {doctor.lastActive}</p>
                             </div>
                             <Badge variant={doctor.status === "active" ? "default" : "secondary"}>
                               {doctor.status}
@@ -549,6 +671,11 @@ export default function HospitalAdminPage() {
                               <Button 
                                 variant="outline" 
                                 size="sm"
+                                className={`${
+                                  theme === 'dark' 
+                                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                    : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                                }`}
                                 onClick={() => handleViewDoctor(doctor)}
                               >
                                 <Eye className="h-4 w-4" />
@@ -556,6 +683,11 @@ export default function HospitalAdminPage() {
                               <Button 
                                 variant="outline" 
                                 size="sm"
+                                className={`${
+                                  theme === 'dark' 
+                                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                    : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                                }`}
                                 onClick={() => handleEditDoctor(doctor)}
                               >
                                 <Edit className="h-4 w-4" />
@@ -563,6 +695,11 @@ export default function HospitalAdminPage() {
                               <Button 
                                 variant="outline" 
                                 size="sm"
+                                className={`${
+                                  theme === 'dark' 
+                                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                    : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                                }`}
                                 onClick={() => {
                                   if (confirm(`Are you sure you want to delete ${doctor.name}?`)) {
                                     alert("Doctor deleted successfully!")
@@ -583,44 +720,62 @@ export default function HospitalAdminPage() {
 
             {activeTab === "analytics" && (
               <div className="space-y-6">
-                <Card className="bg-zinc-800/50 border-zinc-700">
+                <Card className={`${
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                } hover:shadow-lg transition-all duration-300`}>
                   <CardHeader>
-                    <CardTitle className="text-zinc-100">Hospital Analytics</CardTitle>
-                    <CardDescription className="text-zinc-400">Key performance indicators and statistics</CardDescription>
+                    <CardTitle className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>Hospital Analytics</CardTitle>
+                    <CardDescription className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Key performance indicators and statistics</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-semibold text-zinc-100 mb-4">Patient Demographics</h4>
+                        <h4 className={`font-semibold ${
+                          theme === 'dark' ? 'text-gray-100' : 'text-black'
+                        } mb-4`}>Patient Demographics</h4>
                         <div className="space-y-2">
                           <div className="flex justify-between">
-                            <span className="text-zinc-400">Adults (18-65)</span>
-                            <span className="font-semibold text-zinc-100">65%</span>
+                            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Adults (18-65)</span>
+                            <span className={`font-semibold ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
+                            }`}>65%</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-zinc-400">Elderly (65+)</span>
-                            <span className="font-semibold text-zinc-100">20%</span>
+                            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Elderly (65+)</span>
+                            <span className={`font-semibold ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
+                            }`}>20%</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-zinc-400">Children (0-17)</span>
-                            <span className="font-semibold text-zinc-100">15%</span>
+                            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Children (0-17)</span>
+                            <span className={`font-semibold ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
+                            }`}>15%</span>
                           </div>
                         </div>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-zinc-100 mb-4">Consultation Types</h4>
+                        <h4 className={`font-semibold ${
+                          theme === 'dark' ? 'text-gray-100' : 'text-black'
+                        } mb-4`}>Consultation Types</h4>
                         <div className="space-y-2">
                           <div className="flex justify-between">
-                            <span className="text-zinc-400">General Checkup</span>
-                            <span className="font-semibold text-zinc-100">40%</span>
+                            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>General Checkup</span>
+                            <span className={`font-semibold ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
+                            }`}>40%</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-zinc-400">Emergency</span>
-                            <span className="font-semibold text-zinc-100">25%</span>
+                            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Emergency</span>
+                            <span className={`font-semibold ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
+                            }`}>25%</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-zinc-400">Specialist Consultation</span>
-                            <span className="font-semibold text-zinc-100">35%</span>
+                            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Specialist Consultation</span>
+                            <span className={`font-semibold ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
+                            }`}>35%</span>
                           </div>
                         </div>
                       </div>
@@ -632,40 +787,58 @@ export default function HospitalAdminPage() {
 
             {activeTab === "activity" && (
               <div className="space-y-6">
-                <Card className="bg-zinc-800/50 border-zinc-700">
+                <Card className={`${
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                } hover:shadow-lg transition-all duration-300`}>
                   <CardHeader>
-                    <CardTitle className="text-zinc-100">Activity Log</CardTitle>
-                    <CardDescription className="text-zinc-400">Recent system activities and user actions</CardDescription>
+                    <CardTitle className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>Activity Log</CardTitle>
+                    <CardDescription className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Recent system activities and user actions</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
+                      <div className={`flex items-center justify-between p-3 border ${
+                        theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+                      } rounded-lg`}>
                         <div className="flex items-center space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <span className="text-zinc-100">Dr. Abebe Kebede logged in</span>
+                          <span className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>Dr. Abebe Kebede logged in</span>
                         </div>
-                        <span className="text-sm text-zinc-400">2 minutes ago</span>
+                        <span className={`text-sm ${
+                          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                        }`}>2 minutes ago</span>
                       </div>
-                      <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
+                      <div className={`flex items-center justify-between p-3 border ${
+                        theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+                      } rounded-lg`}>
                         <div className="flex items-center space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <span className="text-zinc-100">New patient record created</span>
+                          <span className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>New patient record created</span>
                         </div>
-                        <span className="text-sm text-zinc-400">15 minutes ago</span>
+                        <span className={`text-sm ${
+                          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                        }`}>15 minutes ago</span>
                       </div>
-                      <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
+                      <div className={`flex items-center justify-between p-3 border ${
+                        theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+                      } rounded-lg`}>
                         <div className="flex items-center space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <span className="text-zinc-100">Emergency alert triggered</span>
+                          <span className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>Emergency alert triggered</span>
                         </div>
-                        <span className="text-sm text-zinc-400">1 hour ago</span>
+                        <span className={`text-sm ${
+                          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                        }`}>1 hour ago</span>
                       </div>
-                      <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
+                      <div className={`flex items-center justify-between p-3 border ${
+                        theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+                      } rounded-lg`}>
                         <div className="flex items-center space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <span className="text-zinc-100">System backup completed</span>
+                          <span className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>System backup completed</span>
                         </div>
-                        <span className="text-sm text-zinc-400">3 hours ago</span>
+                        <span className={`text-sm ${
+                          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                        }`}>3 hours ago</span>
                       </div>
                     </div>
                   </CardContent>
@@ -681,28 +854,42 @@ export default function HospitalAdminPage() {
                       placeholder="Search patients..."
                       value={patientSearch}
                       onChange={e => setPatientSearch(e.target.value)}
-                      className="w-64 bg-zinc-700 border-zinc-600 text-zinc-100 placeholder:text-zinc-400"
+                      className={`w-64 ${
+                        theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400' 
+                          : 'bg-white border-gray-300 text-black placeholder:text-gray-500'
+                      } focus:border-blue-500 focus:ring-blue-500`}
                     />
-                    <Button className="bg-sky-500 hover:bg-sky-600">
+                    <Button className="bg-blue-600 hover:bg-blue-700">
                       Search
                     </Button>
                   </div>
-                  <Button className="bg-blue-500 hover:bg-blue-600" onClick={() => setShowAddPatientForm(true)}>
+                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => setShowAddPatientForm(true)}>
                     Add Patient
                   </Button>
                 </div>
                 <div className="grid gap-4">
                   {filteredPatients.length === 0 && (
-                    <div className="text-center text-zinc-400">No patients found.</div>
+                    <div className={`text-center ${
+                      theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                    }`}>No patients found.</div>
                   )}
                   {filteredPatients.map((patient, idx) => (
-                    <Card key={idx} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300">
+                    <Card key={idx} className={`${
+                      theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    } hover:shadow-lg transition-all duration-300`}>
                       <CardContent className="p-6 flex flex-col md:flex-row md:items-center md:justify-between">
                         <div>
-                          <h3 className="font-semibold text-zinc-100">{patient.firstName} {patient.lastName}</h3>
-                          <p className="text-sm text-zinc-400">{patient.gender}, {patient.dateOfBirth}</p>
-                          <p className="text-xs text-zinc-400">{patient.phone} | {patient.email}</p>
-                          <p className="text-xs text-zinc-400">{patient.address}</p>
+                          <h3 className={`font-semibold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{patient.firstName} {patient.lastName}</h3>
+                          <p className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>{patient.gender}, {patient.dateOfBirth}</p>
+                          <p className={`text-xs ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>{patient.phone} | {patient.email}</p>
+                          <p className={`text-xs ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>{patient.address}</p>
                         </div>
                         <div className="flex space-x-2 mt-4 md:mt-0">
                           <Button variant="outline" size="sm" onClick={() => handleViewPatient(patient)}>View</Button>
@@ -737,10 +924,12 @@ export default function HospitalAdminPage() {
 
             {activeTab === "settings" && (
               <div className="space-y-6">
-                <Card className="bg-zinc-800/50 border-zinc-700">
+                <Card className={`${
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                } hover:shadow-lg transition-all duration-300`}>
                   <CardHeader>
-                    <CardTitle className="text-zinc-100">Current Hospital Settings</CardTitle>
-                    <CardDescription className="text-zinc-400">Summary of current configuration</CardDescription>
+                    <CardTitle className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>Current Hospital Settings</CardTitle>
+                    <CardDescription className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Summary of current configuration</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -754,7 +943,7 @@ export default function HospitalAdminPage() {
                       <div><strong>Timezone:</strong> {hospitalSettings.timezone}</div>
                     </div>
                     <div className="flex justify-end mt-6">
-                      <Button className="bg-blue-500 hover:bg-blue-600" onClick={() => setShowSettingsForm(true)}>
+                      <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => setShowSettingsForm(true)}>
                         Edit Settings
                       </Button>
                     </div>

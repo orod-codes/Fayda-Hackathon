@@ -14,8 +14,10 @@ import { useAuth } from "@/contexts/AuthContext"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { useRouter } from "next/navigation"
 import ProtectedRoute from "@/components/ProtectedRoute"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
 import DoctorViewPatientForm from "@/components/DoctorViewPatientForm"
 import DoctorChatInterface from "@/components/DoctorChatInterface"
+import DoctorAITools from "@/components/DoctorAITools"
 import {
   Stethoscope, Users, FileText, Activity, AlertTriangle, Plus, Search, Settings, LogOut,
   BarChart3, Phone, Mail, Calendar, Clock, CheckCircle, XCircle, ArrowLeft,
@@ -948,15 +950,15 @@ Prescription: ${consultation.prescription}`,
   return (
     <ProtectedRoute allowedRoles={["doctor"]} loginRoute="/doctor/login">
       <div className={`min-h-screen ${
-        theme === 'dark' ? 'bg-zinc-900 text-zinc-100' : 'bg-gradient-to-br from-white via-blue-50 to-blue-100 text-gray-900'
+        theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-black'
       }`}>
       <header className={`border-b px-4 py-4 ${
-        theme === 'dark' ? 'border-zinc-800 bg-zinc-900' : 'border-blue-200 bg-white/80 backdrop-blur-sm'
+        theme === 'dark' ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-white'
       }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button variant="ghost" onClick={() => router.push("/")} className={
-              theme === 'dark' ? 'text-zinc-100 hover:bg-zinc-800' : 'text-gray-700 hover:bg-blue-100'
+              theme === 'dark' ? 'text-gray-100 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
             }>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
@@ -967,14 +969,15 @@ Prescription: ${consultation.prescription}`,
             }`}>Doctor Dashboard</span>
           </div>
           <div className="flex items-center space-x-4">
+            <LanguageSwitcher variant="compact" />
             <ThemeToggle />
             <Button variant="ghost" size="sm" className={
-              theme === 'dark' ? 'text-zinc-100 hover:bg-zinc-800' : 'text-gray-700 hover:bg-blue-100'
+              theme === 'dark' ? 'text-gray-100 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
             }>
               <AlertTriangle className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="sm" onClick={handleLogout} className={
-              theme === 'dark' ? 'text-zinc-100 hover:bg-zinc-800' : 'text-gray-700 hover:bg-blue-100'
+              theme === 'dark' ? 'text-gray-100 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
             }>
               <LogOut className="h-4 w-4" />
             </Button>
@@ -986,8 +989,8 @@ Prescription: ${consultation.prescription}`,
         <div className="flex space-x-6">
           <div className="w-64 flex-shrink-0">
             <Card className={`${
-              theme === 'dark' ? 'bg-zinc-800/50 border-zinc-700' : 'bg-white/80 border-blue-200 backdrop-blur-sm'
-            }`}>
+              theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            } hover:shadow-lg transition-all duration-300`}>
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-6">
                   <Avatar className="w-12 h-12">
@@ -1000,10 +1003,10 @@ Prescription: ${consultation.prescription}`,
                   </Avatar>
                   <div>
                     <h3 className={`font-semibold ${
-                      theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                      theme === 'dark' ? 'text-gray-100' : 'text-black'
                     }`}>Dr. {doctorProfile.firstName} {doctorProfile.lastName}</h3>
                     <p className={`text-sm ${
-                      theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                      theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                     }`}>{doctorProfile.specialty}</p>
                   </div>
                 </div>
@@ -1012,11 +1015,11 @@ Prescription: ${consultation.prescription}`,
                   <Button
                     variant={activeTab === "overview" ? "default" : "ghost"}
                     className={`w-full justify-start ${
-                      theme === 'dark' 
-                        ? 'bg-zinc-700 hover:bg-zinc-600 text-zinc-100' 
-                        : activeTab === "overview"
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                        : 'text-gray-700 hover:bg-blue-100'
+                      activeTab === "overview" 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : theme === 'dark' 
+                          ? 'text-gray-300 hover:bg-gray-700' 
+                          : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     onClick={() => setActiveTab("overview")}
                   >
@@ -1026,11 +1029,11 @@ Prescription: ${consultation.prescription}`,
                   <Button
                     variant={activeTab === "patients" ? "default" : "ghost"}
                     className={`w-full justify-start ${
-                      theme === 'dark' 
-                        ? 'bg-zinc-700 hover:bg-zinc-600 text-zinc-100' 
-                        : activeTab === "patients"
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                        : 'text-gray-700 hover:bg-blue-100'
+                      activeTab === "patients" 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : theme === 'dark' 
+                          ? 'text-gray-300 hover:bg-gray-700' 
+                          : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     onClick={() => setActiveTab("patients")}
                   >
@@ -1040,11 +1043,11 @@ Prescription: ${consultation.prescription}`,
                   <Button
                     variant={activeTab === "consultations" ? "default" : "ghost"}
                     className={`w-full justify-start ${
-                      theme === 'dark' 
-                        ? 'bg-zinc-700 hover:bg-zinc-600 text-zinc-100' 
-                        : activeTab === "consultations"
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                        : 'text-gray-700 hover:bg-blue-100'
+                      activeTab === "consultations" 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : theme === 'dark' 
+                          ? 'text-gray-300 hover:bg-gray-700' 
+                          : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     onClick={() => setActiveTab("consultations")}
                   >
@@ -1054,11 +1057,11 @@ Prescription: ${consultation.prescription}`,
                   <Button
                     variant={activeTab === "ai-tools" ? "default" : "ghost"}
                     className={`w-full justify-start ${
-                      theme === 'dark' 
-                        ? 'bg-zinc-700 hover:bg-zinc-600 text-zinc-100' 
-                        : activeTab === "ai-tools"
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                        : 'text-gray-700 hover:bg-blue-100'
+                      activeTab === "ai-tools" 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : theme === 'dark' 
+                          ? 'text-gray-300 hover:bg-gray-700' 
+                          : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     onClick={() => setActiveTab("ai-tools")}
                   >
@@ -1068,11 +1071,11 @@ Prescription: ${consultation.prescription}`,
                   <Button
                     variant={activeTab === "reports" ? "default" : "ghost"}
                     className={`w-full justify-start ${
-                      theme === 'dark' 
-                        ? 'bg-zinc-700 hover:bg-zinc-600 text-zinc-100' 
-                        : activeTab === "reports"
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                        : 'text-gray-700 hover:bg-blue-100'
+                      activeTab === "reports" 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : theme === 'dark' 
+                          ? 'text-gray-300 hover:bg-gray-700' 
+                          : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     onClick={() => setActiveTab("reports")}
                   >
@@ -1082,11 +1085,11 @@ Prescription: ${consultation.prescription}`,
                   <Button
                     variant={activeTab === "settings" ? "default" : "ghost"}
                     className={`w-full justify-start ${
-                      theme === 'dark' 
-                        ? 'bg-zinc-700 hover:bg-zinc-600 text-zinc-100' 
-                        : activeTab === "settings"
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                        : 'text-gray-700 hover:bg-blue-100'
+                      activeTab === "settings" 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : theme === 'dark' 
+                          ? 'text-gray-300 hover:bg-gray-700' 
+                          : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     onClick={() => setActiveTab("settings")}
                   >
@@ -1110,68 +1113,68 @@ Prescription: ${consultation.prescription}`,
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <Card className={`${
-                    theme === 'dark' ? 'bg-zinc-800/50 border-zinc-700' : 'bg-white/80 border-blue-200 backdrop-blur-sm'
-                  }`}>
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
                         <Users className="h-8 w-8 text-blue-400" />
                         <div>
                           <p className={`text-2xl font-bold ${
-                            theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
                           }`}>{doctorStats.totalPatients}</p>
                           <p className={`text-sm ${
-                            theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                           }`}>Total Patients</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                   <Card className={`${
-                    theme === 'dark' ? 'bg-zinc-800/50 border-zinc-700' : 'bg-white/80 border-blue-200 backdrop-blur-sm'
-                  }`}>
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
                         <Stethoscope className="h-8 w-8 text-green-400" />
                         <div>
                           <p className={`text-2xl font-bold ${
-                            theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
                           }`}>{doctorStats.consultationsToday}</p>
                           <p className={`text-sm ${
-                            theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                           }`}>Today's Consultations</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                   <Card className={`${
-                    theme === 'dark' ? 'bg-zinc-800/50 border-zinc-700' : 'bg-white/80 border-blue-200 backdrop-blur-sm'
-                  }`}>
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
                         <AlertTriangle className="h-8 w-8 text-red-400" />
                         <div>
                           <p className={`text-2xl font-bold ${
-                            theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
                           }`}>{doctorStats.emergencyCases}</p>
                           <p className={`text-sm ${
-                            theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                           }`}>Emergency Cases</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                   <Card className={`${
-                    theme === 'dark' ? 'bg-zinc-800/50 border-zinc-700' : 'bg-white/80 border-blue-200 backdrop-blur-sm'
-                  }`}>
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3">
                         <FileText className="h-8 w-8 text-purple-400" />
                         <div>
                           <p className={`text-2xl font-bold ${
-                            theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
                           }`}>{doctorStats.pendingReports}</p>
                           <p className={`text-sm ${
-                            theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                           }`}>Pending Reports</p>
                         </div>
                       </div>
@@ -1181,14 +1184,14 @@ Prescription: ${consultation.prescription}`,
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Card className={`${
-                    theme === 'dark' ? 'bg-zinc-800/50 border-zinc-700' : 'bg-white/80 border-blue-200 backdrop-blur-sm'
-                  }`}>
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle className={`${
-                        theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                        theme === 'dark' ? 'text-gray-100' : 'text-black'
                       }`}>Quick Actions</CardTitle>
                       <CardDescription className={`${
-                        theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                       }`}>Common doctor tasks</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3">
@@ -1228,42 +1231,42 @@ Prescription: ${consultation.prescription}`,
                   </Card>
 
                   <Card className={`${
-                    theme === 'dark' ? 'bg-zinc-800/50 border-zinc-700' : 'bg-white/80 border-blue-200 backdrop-blur-sm'
-                  }`}>
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle className={`${
-                        theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                        theme === 'dark' ? 'text-gray-100' : 'text-black'
                       }`}>Performance Stats</CardTitle>
                       <CardDescription className={`${
-                        theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                       }`}>Your professional metrics</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="flex items-center justify-between">
                         <span className={`${
-                          theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+                          theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                         }`}>Patient Rating</span>
                         <span className={`font-semibold ${
-                          theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                          theme === 'dark' ? 'text-gray-100' : 'text-black'
                         }`}>{doctorStats.averageRating}/5.0</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className={`${
-                          theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+                          theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                         }`}>Years Experience</span>
                         <span className={`font-semibold ${
-                          theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                          theme === 'dark' ? 'text-gray-100' : 'text-black'
                         }`}>{doctorStats.yearsExperience} years</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className={`${
-                          theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+                          theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                         }`}>Specialization</span>
                         <Badge className="bg-green-500 text-white">Cardiology</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className={`${
-                          theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+                          theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                         }`}>License Status</span>
                         <Badge className="bg-green-500 text-white">Active</Badge>
                       </div>
@@ -1272,21 +1275,21 @@ Prescription: ${consultation.prescription}`,
                 </div>
 
                 <Card className={`${
-                  theme === 'dark' ? 'bg-zinc-800/50 border-zinc-700' : 'bg-white/80 border-blue-200 backdrop-blur-sm'
-                }`}>
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                } hover:shadow-lg transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle className={`${
-                      theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                      theme === 'dark' ? 'text-gray-100' : 'text-black'
                     }`}>Recent Activity</CardTitle>
                     <CardDescription className={`${
-                      theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                      theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                     }`}>Your latest medical activities and consultations</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       {recentActivity.map((activity) => (
                         <div key={activity.id} className={`flex items-center space-x-4 p-3 rounded-lg ${
-                          theme === 'dark' ? 'bg-zinc-700/50' : 'bg-blue-50/50'
+                          theme === 'dark' ? 'bg-gray-700/50' : 'bg-gray-50'
                         }`}>
                           <div className={`w-2 h-2 rounded-full ${
                             activity.type === 'emergency' ? 'bg-red-500' :
@@ -1295,14 +1298,14 @@ Prescription: ${consultation.prescription}`,
                           }`} />
                           <div className="flex-1">
                             <p className={`font-medium ${
-                              theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
                             }`}>{activity.action}</p>
                             <p className={`text-sm ${
-                              theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                             }`}>{activity.details}</p>
                           </div>
                           <span className={`text-xs ${
-                            theme === 'dark' ? 'text-zinc-500' : 'text-gray-500'
+                            theme === 'dark' ? 'text-gray-500' : 'text-gray-500'
                           }`}>{activity.timestamp}</span>
                         </div>
                       ))}
@@ -1329,9 +1332,13 @@ Prescription: ${consultation.prescription}`,
                           }
                         }
                       }}
-                      className="w-64 bg-zinc-700 border-zinc-600 text-zinc-100 placeholder:text-zinc-400"
+                      className={`w-64 ${
+                        theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400' 
+                          : 'bg-white border-gray-300 text-black placeholder:text-gray-500'
+                      } focus:border-blue-500 focus:ring-blue-500`}
                     />
-                    <Button className="bg-sky-500 hover:bg-sky-600" onClick={() => {
+                    <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => {
                       if (searchQuery.trim()) {
                         showNotification(`Searching for: ${searchQuery}`, "info")
                       } else {
@@ -1349,23 +1356,29 @@ Prescription: ${consultation.prescription}`,
                           setSearchQuery("")
                           showNotification("Search cleared", "info")
                         }}
-                        className="border-zinc-600 text-zinc-300 hover:bg-zinc-700"
+                        className={`${
+                          theme === 'dark' 
+                            ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                            : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                        }`}
                       >
                         <X className="h-4 w-4" />
                       </Button>
                     )}
                   </div>
-                  <Button className="bg-green-500 hover:bg-green-600" onClick={handleAddPatient}>
+                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleAddPatient}>
                     <UserPlus className="h-4 w-4 mr-2" />
                     Add Patient
                   </Button>
                 </div>
 
                 {searchQuery && (
-                  <div className="flex items-center justify-between p-3 bg-zinc-700/50 rounded-lg">
+                  <div className={`flex items-center justify-between p-3 rounded-lg ${
+                    theme === 'dark' ? 'bg-gray-700/50' : 'bg-gray-50'
+                  }`}>
                     <div className="flex items-center space-x-2">
                       <Search className="h-4 w-4 text-blue-400" />
-                      <span className="text-zinc-300">
+                      <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>
                         Search results for "{searchQuery}": {filteredPatients.length} patients found
                       </span>
                     </div>
@@ -1373,7 +1386,9 @@ Prescription: ${consultation.prescription}`,
                       variant="ghost" 
                       size="sm"
                       onClick={() => setSearchQuery("")}
-                      className="text-zinc-400 hover:text-zinc-100"
+                      className={`${
+                        theme === 'dark' ? 'text-gray-400 hover:text-gray-100' : 'text-gray-500 hover:text-gray-700'
+                      }`}
                     >
                       Clear Search
                     </Button>
@@ -1383,22 +1398,34 @@ Prescription: ${consultation.prescription}`,
                 <div className="grid gap-4">
                   {filteredPatients.length === 0 && searchQuery ? (
                     <div className="text-center py-8">
-                      <Search className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-zinc-300 mb-2">No patients found</h3>
-                      <p className="text-zinc-500 mb-4">
+                      <Search className={`h-12 w-12 mx-auto mb-4 ${
+                        theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+                      }`} />
+                      <h3 className={`text-lg font-semibold mb-2 ${
+                        theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                      }`}>No patients found</h3>
+                      <p className={`mb-4 ${
+                        theme === 'dark' ? 'text-gray-500' : 'text-gray-600'
+                      }`}>
                         No patients match your search for "{searchQuery}"
                       </p>
                       <Button 
                         variant="outline" 
                         onClick={() => setSearchQuery("")}
-                        className="border-zinc-600 text-zinc-300 hover:bg-zinc-700"
+                        className={`${
+                          theme === 'dark' 
+                            ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                            : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                        }`}
                       >
                         Clear Search
                       </Button>
                     </div>
                   ) : (
                     filteredPatients.map((patient) => (
-                    <Card key={patient.id} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300">
+                    <Card key={patient.id} className={`${
+                      theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    } hover:shadow-lg transition-all duration-300`}>
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-4">
@@ -1409,12 +1436,20 @@ Prescription: ${consultation.prescription}`,
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <h3 className="text-lg font-semibold text-zinc-100">{patient.name}</h3>
-                              <p className="text-zinc-400">FIN: {patient.faydaId}</p>
+                              <h3 className={`text-lg font-semibold ${
+                                theme === 'dark' ? 'text-gray-100' : 'text-black'
+                              }`}>{patient.name}</h3>
+                              <p className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>FIN: {patient.faydaId}</p>
                               <div className="flex items-center space-x-4 mt-2">
-                                <span className="text-sm text-zinc-400">{patient.age} years, {patient.gender}</span>
-                                <span className="text-sm text-zinc-400">Blood: {patient.bloodType}</span>
-                                <span className="text-sm text-zinc-400">Last visit: {patient.lastVisit}</span>
+                                <span className={`text-sm ${
+                                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                                }`}>{patient.age} years, {patient.gender}</span>
+                                <span className={`text-sm ${
+                                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                                }`}>Blood: {patient.bloodType}</span>
+                                <span className={`text-sm ${
+                                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                                }`}>Last visit: {patient.lastVisit}</span>
                               </div>
                               <div className="flex flex-wrap gap-1 mt-2">
                                 {patient.conditions.map((condition, index) => (
@@ -1432,25 +1467,43 @@ Prescription: ${consultation.prescription}`,
                               {patient.status}
                             </Badge>
                             <div className="flex space-x-2">
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={() => handleViewPatient(patient)}>
+                              <Button size="sm" variant="outline" className={`${
+                                theme === 'dark' 
+                                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                  : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                              }`} onClick={() => handleViewPatient(patient)}>
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={() => handleStartConsultation(patient)}>
+                              <Button size="sm" variant="outline" className={`${
+                                theme === 'dark' 
+                                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                  : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                              }`} onClick={() => handleStartConsultation(patient)}>
                                 <Stethoscope className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={() => handleViewPatientHistory(patient)}>
+                              <Button size="sm" variant="outline" className={`${
+                                theme === 'dark' 
+                                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                  : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                              }`} onClick={() => handleViewPatientHistory(patient)}>
                                 <FileText className="h-4 w-4" />
                               </Button>
                             </div>
                           </div>
                         </div>
-                        <div className="mt-4 pt-4 border-t border-zinc-700">
+                        <div className={`mt-4 pt-4 border-t ${
+                          theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+                        }`}>
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="text-sm text-zinc-400">Emergency Contact: {patient.emergencyContact}</p>
-                              <p className="text-sm text-zinc-400">Allergies: {patient.allergies.join(', ')}</p>
+                              <p className={`text-sm ${
+                                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                              }`}>Emergency Contact: {patient.emergencyContact}</p>
+                              <p className={`text-sm ${
+                                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                              }`}>Allergies: {patient.allergies.join(', ')}</p>
                             </div>
-                            <Button size="sm" className="bg-blue-500 hover:bg-blue-600" onClick={() => handleViewPatientHistory(patient)}>
+                            <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => handleViewPatientHistory(patient)}>
                               View Full History
                             </Button>
                           </div>
@@ -1466,15 +1519,25 @@ Prescription: ${consultation.prescription}`,
             {activeTab === "consultations" && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-bold text-zinc-100">Consultations</h2>
+                  <h2 className={`text-2xl font-bold ${
+                    theme === 'dark' ? 'text-gray-100' : 'text-black'
+                  }`}>Consultations</h2>
                   <div className="flex space-x-2">
                     <Input
                       placeholder="Search consultations..."
                       value={consultationSearchQuery}
                       onChange={(e) => setConsultationSearchQuery(e.target.value)}
-                      className="w-64 bg-zinc-700 border-zinc-600 text-zinc-100 placeholder:text-zinc-400"
+                      className={`w-64 ${
+                        theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400' 
+                          : 'bg-white border-gray-300 text-black placeholder:text-gray-500'
+                      } focus:border-blue-500 focus:ring-blue-500`}
                     />
-                    <Button variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={handleImportConsultation}>
+                    <Button variant="outline" className={`${
+                      theme === 'dark' 
+                        ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                    }`} onClick={handleImportConsultation}>
                       <Upload className="h-4 w-4 mr-2" />
                       Import PDF
                     </Button>
@@ -1482,7 +1545,7 @@ Prescription: ${consultation.prescription}`,
                       <Download className="h-4 w-4 mr-2" />
                       Export All PDF
                     </Button>
-                    <Button className="bg-green-500 hover:bg-green-600" onClick={handleNewConsultation}>
+                    <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleNewConsultation}>
                       <Plus className="h-4 w-4 mr-2" />
                       New Consultation
                     </Button>
@@ -1491,46 +1554,70 @@ Prescription: ${consultation.prescription}`,
 
                 {/* Consultation Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-3">
                         <Stethoscope className="h-6 w-6 text-blue-400" />
                         <div>
-                          <p className="text-lg font-bold text-zinc-100">{consultations.length}</p>
-                          <p className="text-sm text-zinc-400">Total</p>
+                          <p className={`text-lg font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{consultations.length}</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>Total</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-3">
                         <CheckCircle className="h-6 w-6 text-green-400" />
                         <div>
-                          <p className="text-lg font-bold text-zinc-100">{consultations.filter(c => c.status === 'completed').length}</p>
-                          <p className="text-sm text-zinc-400">Completed</p>
+                          <p className={`text-lg font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{consultations.filter(c => c.status === 'completed').length}</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>Completed</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-3">
                         <Clock className="h-6 w-6 text-blue-400" />
                         <div>
-                          <p className="text-lg font-bold text-zinc-100">{consultations.filter(c => c.status === 'pending').length}</p>
-                          <p className="text-sm text-zinc-400">Pending</p>
+                          <p className={`text-lg font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>{consultations.filter(c => c.status === 'pending').length}</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>Pending</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="bg-zinc-800/50 border-zinc-700">
+                  <Card className={`${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  } hover:shadow-lg transition-all duration-300`}>
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-3">
                         <Calendar className="h-6 w-6 text-purple-400" />
                         <div>
-                          <p className="text-lg font-bold text-zinc-100">Today</p>
-                          <p className="text-sm text-zinc-400">New: 2</p>
+                          <p className={`text-lg font-bold ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-black'
+                          }`}>Today</p>
+                          <p className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                          }`}>New: 2</p>
                         </div>
                       </div>
                     </CardContent>
@@ -1542,21 +1629,39 @@ Prescription: ${consultation.prescription}`,
                   <Button 
                     variant={consultationFilter === "all" ? "default" : "outline"}
                     onClick={() => setConsultationFilter("all")}
-                    className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                    className={`${
+                      consultationFilter === "all" 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : theme === 'dark' 
+                          ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                          : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                    }`}
                   >
                     All ({consultations.length})
                   </Button>
                   <Button 
                     variant={consultationFilter === "completed" ? "default" : "outline"}
                     onClick={() => setConsultationFilter("completed")}
-                    className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                    className={`${
+                      consultationFilter === "completed" 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : theme === 'dark' 
+                          ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                          : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                    }`}
                   >
                     Completed ({consultations.filter(c => c.status === 'completed').length})
                   </Button>
                   <Button 
                     variant={consultationFilter === "pending" ? "default" : "outline"}
                     onClick={() => setConsultationFilter("pending")}
-                    className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+                    className={`${
+                      consultationFilter === "pending" 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : theme === 'dark' 
+                          ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                          : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                    }`}
                   >
                     Pending ({consultations.filter(c => c.status === 'pending').length})
                   </Button>
@@ -1575,7 +1680,9 @@ Prescription: ${consultation.prescription}`,
                       consultation.diagnosis.toLowerCase().includes(consultationSearchQuery.toLowerCase())
                     )
                     .map((consultation) => (
-                    <Card key={consultation.id} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-all duration-300">
+                    <Card key={consultation.id} className={`${
+                      theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    } hover:shadow-lg transition-all duration-300`}>
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-4">
@@ -1583,16 +1690,28 @@ Prescription: ${consultation.prescription}`,
                               <Stethoscope className="h-6 w-6 text-white" />
                             </div>
                             <div>
-                              <h3 className="text-lg font-semibold text-zinc-100">{consultation.patientName}</h3>
-                              <p className="text-zinc-400">{consultation.type} Consultation</p>
-                              <p className="text-sm text-zinc-500">Date: {consultation.date}</p>
+                              <h3 className={`text-lg font-semibold ${
+                                theme === 'dark' ? 'text-gray-100' : 'text-black'
+                              }`}>{consultation.patientName}</h3>
+                              <p className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>{consultation.type} Consultation</p>
+                              <p className={`text-sm ${
+                                theme === 'dark' ? 'text-gray-500' : 'text-gray-500'
+                              }`}>Date: {consultation.date}</p>
                               {consultation.finNumber && (
-                                <p className="text-sm text-zinc-500">FIN: {consultation.finNumber}</p>
+                                <p className={`text-sm ${
+                                  theme === 'dark' ? 'text-gray-500' : 'text-gray-500'
+                                }`}>FIN: {consultation.finNumber}</p>
                               )}
                               <div className="flex items-center space-x-2 mt-2">
-                                <span className="text-sm text-zinc-400">Diagnosis: {consultation.diagnosis}</span>
-                                <span className="text-sm text-zinc-400">•</span>
-                                <span className="text-sm text-zinc-400">Prescription: {consultation.prescription}</span>
+                                <span className={`text-sm ${
+                                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                                }`}>Diagnosis: {consultation.diagnosis}</span>
+                                <span className={`text-sm ${
+                                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                                }`}>•</span>
+                                <span className={`text-sm ${
+                                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                                }`}>Prescription: {consultation.prescription}</span>
                               </div>
                             </div>
                           </div>
@@ -1603,16 +1722,32 @@ Prescription: ${consultation.prescription}`,
                               {consultation.status}
                             </Badge>
                             <div className="flex space-x-2">
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={() => handleViewConsultationDetails(consultation)}>
+                              <Button size="sm" variant="outline" className={`${
+                                theme === 'dark' 
+                                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                  : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                              }`} onClick={() => handleViewConsultationDetails(consultation)}>
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={() => handleEditConsultation(consultation)}>
+                              <Button size="sm" variant="outline" className={`${
+                                theme === 'dark' 
+                                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                  : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                              }`} onClick={() => handleEditConsultation(consultation)}>
                                 <Edit className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={() => handleViewConsultationReport(consultation)}>
+                              <Button size="sm" variant="outline" className={`${
+                                theme === 'dark' 
+                                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                  : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                              }`} onClick={() => handleViewConsultationReport(consultation)}>
                                 <FileText className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={() => handleUploadConsultation(consultation)}>
+                              <Button size="sm" variant="outline" className={`${
+                                theme === 'dark' 
+                                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                                  : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                              }`} onClick={() => handleUploadConsultation(consultation)}>
                                 <Upload className="h-4 w-4" />
                               </Button>
                               <Button size="sm" variant="outline" className="border-blue-600 text-blue-300 hover:bg-blue-700" onClick={() => handleExportConsultation(consultation)}>
@@ -1637,51 +1772,75 @@ Prescription: ${consultation.prescription}`,
             )}
 
             {activeTab === "ai-tools" && (
-              <DoctorChatInterface onBack={() => setActiveTab("overview")} />
+              <DoctorAITools onBack={() => setActiveTab("overview")} />
             )}
 
             {activeTab === "reports" && (
               <div className="space-y-6">
-                <Card className="bg-zinc-800/50 border-zinc-700">
+                <Card className={`${
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                } hover:shadow-lg transition-all duration-300`}>
                   <CardHeader>
-                    <CardTitle className="text-zinc-100">Medical Reports</CardTitle>
-                    <CardDescription className="text-zinc-400">Generate and manage patient reports</CardDescription>
+                    <CardTitle className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>Medical Reports</CardTitle>
+                    <CardDescription className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Generate and manage patient reports</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <Button className="w-full bg-blue-500 hover:bg-blue-600" onClick={handleGenerateReport}>
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={handleGenerateReport}>
                         <FileText className="h-4 w-4 mr-2" />
                         Generate PDF Report
                       </Button>
-                      <Button className="w-full bg-green-500 hover:bg-green-600" onClick={handleUploadReport}>
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={handleUploadReport}>
                         <Upload className="h-4 w-4 mr-2" />
                         Upload PDF Report
                       </Button>
-                      <Button className="w-full bg-purple-500 hover:bg-purple-600" onClick={handleExportData}>
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={handleExportData}>
                         <Download className="h-4 w-4 mr-2" />
                         Export All Data PDF
                       </Button>
                     </div>
 
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-zinc-100">Recent Reports</h3>
+                      <h3 className={`text-lg font-semibold ${
+                        theme === 'dark' ? 'text-gray-100' : 'text-black'
+                      }`}>Recent Reports</h3>
                       <div className="space-y-3">
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-700/50">
+                        <div className={`flex items-center justify-between p-3 rounded-lg ${
+                          theme === 'dark' ? 'bg-gray-700/50' : 'bg-gray-50'
+                        }`}>
                           <div>
-                            <p className="text-zinc-100 font-medium">Alemayehu Kebede - Cardiac Report</p>
-                            <p className="text-sm text-zinc-400">Generated 2 hours ago</p>
+                            <p className={`font-medium ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
+                            }`}>Alemayehu Kebede - Cardiac Report</p>
+                            <p className={`text-sm ${
+                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                            }`}>Generated 2 hours ago</p>
                           </div>
-                          <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={() => handleDownloadReport("Alemayehu Kebede - Cardiac Report")}>
+                          <Button size="sm" variant="outline" className={`${
+                            theme === 'dark' 
+                              ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                              : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                          }`} onClick={() => handleDownloadReport("Alemayehu Kebede - Cardiac Report")}>
                             <Download className="h-4 w-4" />
                             PDF
                           </Button>
                         </div>
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-700/50">
+                        <div className={`flex items-center justify-between p-3 rounded-lg ${
+                          theme === 'dark' ? 'bg-gray-700/50' : 'bg-gray-50'
+                        }`}>
                           <div>
-                            <p className="text-zinc-100 font-medium">Fatima Ahmed - Asthma Evaluation</p>
-                            <p className="text-sm text-zinc-400">Generated 1 day ago</p>
+                            <p className={`font-medium ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
+                            }`}>Fatima Ahmed - Asthma Evaluation</p>
+                            <p className={`text-sm ${
+                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                            }`}>Generated 1 day ago</p>
                           </div>
-                          <Button size="sm" variant="outline" className="border-zinc-600 text-zinc-300 hover:bg-zinc-700" onClick={() => handleDownloadReport("Fatima Ahmed - Asthma Evaluation")}>
+                          <Button size="sm" variant="outline" className={`${
+                            theme === 'dark' 
+                              ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                              : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                          }`} onClick={() => handleDownloadReport("Fatima Ahmed - Asthma Evaluation")}>
                             <Download className="h-4 w-4" />
                             PDF
                           </Button>
@@ -1696,61 +1855,61 @@ Prescription: ${consultation.prescription}`,
             {activeTab === "settings" && (
               <div className="space-y-6">
                 <Card className={`${
-                  theme === 'dark' ? 'bg-zinc-800/50 border-zinc-700' : 'bg-white/80 border-blue-200 backdrop-blur-sm'
-                }`}>
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                } hover:shadow-lg transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle className={`${
-                      theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                      theme === 'dark' ? 'text-gray-100' : 'text-black'
                     }`}>Doctor Settings</CardTitle>
                     <CardDescription className={`${
-                      theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                      theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                     }`}>Configure your professional profile and preferences</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">
                         <h3 className={`text-lg font-semibold ${
-                          theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                          theme === 'dark' ? 'text-gray-100' : 'text-black'
                         }`}>Profile Information</h3>
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+                              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                             }`}>Name</span>
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
                             }`}>Dr. {doctorProfile.firstName} {doctorProfile.lastName}</span>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+                              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                             }`}>Specialization</span>
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
                             }`}>{doctorProfile.specialty}</span>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+                              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                             }`}>License Number</span>
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
                             }`}>{doctorProfile.licenseNumber}</span>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+                              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                             }`}>Hospital</span>
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
                             }`}>{doctorProfile.hospital}</span>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+                              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                             }`}>Experience</span>
                             <span className={`${
-                              theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
                             }`}>{doctorProfile.experience} years</span>
                           </div>
                         </div>

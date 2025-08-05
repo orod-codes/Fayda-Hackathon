@@ -49,7 +49,15 @@ const Client = ({ accessToken, user }: { accessToken: string; user: any }) => {
     router.push("/patient");
   }, [accessToken]);
 
-  return <div>Logging you in...</div>;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto mb-4"></div>
+        <h2 className="text-xl font-semibold text-black dark:text-white mb-2">Logging you in...</h2>
+        <p className="text-gray-600 dark:text-gray-400">Please wait while we complete your authentication</p>
+      </div>
+    </div>
+  );
 };
 
 export default Client;

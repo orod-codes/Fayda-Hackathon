@@ -2,10 +2,13 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Open_Sans, Roboto, Montserrat } from "next/font/google"
 import "./globals.css"
-import { LanguageProvider } from "@/contexts/LanguageContext"
-import { ThemeProvider } from "@/contexts/ThemeContext"
-import { AuthProvider } from "@/contexts/AuthContext"
+import dynamic from "next/dynamic"
 import { Toaster } from "@/components/ui/toaster"
+
+// Dynamically import providers to prevent SSR issues
+const LanguageProvider = dynamic(() => import("@/contexts/LanguageContext").then(mod => ({ default: mod.LanguageProvider })), { ssr: false })
+const ThemeProvider = dynamic(() => import("@/contexts/ThemeContext").then(mod => ({ default: mod.ThemeProvider })), { ssr: false })
+const AuthProvider = dynamic(() => import("@/contexts/AuthContext").then(mod => ({ default: mod.AuthProvider })), { ssr: false })
 
 const openSans = Open_Sans({
   subsets: ["latin"],

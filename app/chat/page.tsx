@@ -40,7 +40,6 @@ export default function ChatPage() {
   const { theme } = useTheme();
   const { user, logout } = useAuth();
 
-
   const router = useRouter();
  const [messages, setMessages] = useState<Message[]>([
   {
@@ -141,14 +140,14 @@ export default function ChatPage() {
       <div
         className={`min-h-screen ${
           theme === 'dark'
-            ? 'bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-zinc-100'
-            : 'bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 text-zinc-900'
+            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white'
+            : 'bg-gradient-to-br from-blue-50 via-white to-blue-100 text-black'
         }`}
       >
         {/* Header */}
         <header
           className={`border-b backdrop-blur-sm px-6 py-4 ${
-            theme === 'dark' ? 'border-zinc-800/50 bg-zinc-900/50' : 'border-zinc-200/50 bg-white/50'
+            theme === 'dark' ? 'border-gray-700/50 bg-gray-800/50' : 'border-gray-200/50 bg-white/50'
           }`}
         >
           <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -157,11 +156,11 @@ export default function ChatPage() {
                 variant="ghost"
                 onClick={() => router.push('/patient')}
                 className={`${
-                  theme === 'dark' ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-900'
-                }`}
+                  theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'
+                } transition-colors duration-200`}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
+                {translations.backToDashboard}
               </Button>
               <div className="flex items-center space-x-3">
                 <div
@@ -171,8 +170,8 @@ export default function ChatPage() {
                 >
                   <Image src="/images/hakmin-logo.png" alt="Hakmin Logo" width={24} height={24} />
                 </div>
-                <span className={`text-xl font-bold ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
-                  Health Chat
+                <span className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                  {translations.healthChat}
                 </span>
               </div>
             </div>
@@ -185,7 +184,7 @@ export default function ChatPage() {
                 }`}
               >
                 <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                AI Online
+                {translations.aiOnline}
               </Badge>
             </div>
           </div>
@@ -198,10 +197,10 @@ export default function ChatPage() {
               <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
               <div>
                 <p className={`font-semibold ${theme === 'dark' ? 'text-red-300' : 'text-red-800'}`}>
-                  Emergency Detected!
+                  {translations.emergencyDetected}
                 </p>
                 <p className={`text-sm ${theme === 'dark' ? 'text-red-400' : 'text-red-700'}`}>
-                  Please call emergency services immediately: 911
+                  {translations.emergencyCall}
                 </p>
               </div>
             </div>
@@ -216,11 +215,11 @@ export default function ChatPage() {
               <Card
                 className={`h-[700px] flex flex-col ${
                   theme === 'dark'
-                    ? 'bg-zinc-800/50 backdrop-blur-sm border-zinc-700'
-                    : 'bg-white/50 backdrop-blur-sm border-zinc-200'
+                    ? 'bg-gray-800/50 backdrop-blur-sm border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300'
+                    : 'bg-white/50 backdrop-blur-sm border-gray-200 shadow-xl hover:shadow-2xl transition-shadow duration-300'
                 }`}
               >
-                <CardHeader className={`border-b ${theme === 'dark' ? 'border-zinc-700' : 'border-zinc-200'}`}>
+                <CardHeader className={`border-b ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
                   <div className="flex items-center space-x-3">
                     <Avatar>
                       <AvatarFallback className="bg-gradient-to-r from-sky-400 to-blue-600 text-white">
@@ -228,11 +227,11 @@ export default function ChatPage() {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <CardTitle className={`text-lg ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
-                        Hakmin AI Assistant
+                      <CardTitle className={`text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                        {translations.hakminAI}
                       </CardTitle>
-                      <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                        Your AI health companion powered by ChatGPT
+                      <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {translations.aiHealthCompanion}
                       </p>
                     </div>
                     <Badge
@@ -243,7 +242,7 @@ export default function ChatPage() {
                       }`}
                     >
                       <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                      Online
+                      {translations.online}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -280,8 +279,8 @@ export default function ChatPage() {
                                   ? 'bg-red-500/20 border border-red-500/30 text-red-300'
                                   : 'bg-red-100 border border-red-300 text-red-800'
                                 : theme === 'dark'
-                                ? 'bg-zinc-700/50 text-zinc-100 border border-zinc-600/50'
-                                : 'bg-gray-100 text-gray-900'
+                                ? 'bg-gray-700/50 text-white border border-gray-600/50'
+                                : 'bg-gray-100 text-black'
                             }`}
                           >
                             <p className="text-sm leading-relaxed">{message.content}</p>
@@ -303,7 +302,7 @@ export default function ChatPage() {
                           </Avatar>
                           <div
                             className={`rounded-lg p-3 ${
-                              theme === 'dark' ? 'bg-zinc-700/50 border border-zinc-600/50' : 'bg-gray-100'
+                              theme === 'dark' ? 'bg-gray-700/50 border border-gray-600/50' : 'bg-gray-100'
                             }`}
                           >
                             <div className="flex space-x-1">
@@ -326,24 +325,24 @@ export default function ChatPage() {
                   </div>
                 </CardContent>
 
-                <div className={`border-t p-4 ${theme === 'dark' ? 'border-zinc-700' : 'border-zinc-200'}`}>
+                <div className={`border-t p-4 ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
                   <div className="flex space-x-2">
                     <Input
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Type your health question..."
+                      placeholder={translations.typeMessage}
                       className={`flex-1 ${
                         theme === 'dark'
-                          ? 'bg-zinc-700 border-zinc-600 text-zinc-100 placeholder:text-zinc-400'
-                          : 'bg-white border-zinc-300 text-zinc-900 placeholder:text-zinc-500'
-                      }`}
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500'
+                          : 'bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-blue-500'
+                      } transition-colors duration-200`}
                       disabled={isLoading}
                     />
                     <Button
                       onClick={handleSendMessage}
                       disabled={isLoading || !inputMessage.trim()}
-                      className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                      className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-colors duration-200"
                     >
                       <Send className="h-4 w-4" />
                     </Button>
@@ -357,13 +356,13 @@ export default function ChatPage() {
               <Card
                 className={`${
                   theme === 'dark'
-                    ? 'bg-zinc-800/50 backdrop-blur-sm border-zinc-700'
-                    : 'bg-white/50 backdrop-blur-sm border-zinc-200'
+                    ? 'bg-gray-800/50 backdrop-blur-sm border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300'
+                    : 'bg-white/50 backdrop-blur-sm border-gray-200 shadow-xl hover:shadow-2xl transition-shadow duration-300'
                 }`}
               >
                 <CardHeader>
-                  <CardTitle className={`text-lg ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
-                    Quick Actions
+                  <CardTitle className={`text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                    {translations.quickActions}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
@@ -371,46 +370,46 @@ export default function ChatPage() {
                     variant="outline"
                     className={`w-full justify-start ${
                       theme === 'dark'
-                        ? 'border-zinc-600 text-zinc-300 hover:bg-zinc-700'
-                        : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50'
-                    }`}
+                        ? 'border-gray-600 text-white hover:bg-gray-700'
+                        : 'border-gray-300 text-black hover:bg-gray-50'
+                    } transition-colors duration-200`}
                     onClick={() => router.push('/patient')}
                   >
                     <Phone className="h-4 w-4 mr-2" />
-                    Emergency Contacts
+                    {translations.emergencyContacts}
                   </Button>
                   <Button
                     variant="outline"
                     className={`w-full justify-start ${
                       theme === 'dark'
-                        ? 'border-zinc-600 text-zinc-300 hover:bg-zinc-700'
-                        : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50'
-                    }`}
+                        ? 'border-gray-600 text-white hover:bg-gray-700'
+                        : 'border-gray-300 text-black hover:bg-gray-50'
+                    } transition-colors duration-200`}
                   >
                     <FileText className="h-4 w-4 mr-2" />
-                    Upload Documents
+                    {translations.uploadDocuments}
                   </Button>
                   <Button
                     variant="outline"
                     className={`w-full justify-start ${
                       theme === 'dark'
-                        ? 'border-zinc-600 text-zinc-300 hover:bg-zinc-700'
-                        : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50'
-                    }`}
+                        ? 'border-gray-600 text-white hover:bg-gray-700'
+                        : 'border-gray-300 text-black hover:bg-gray-50'
+                    } transition-colors duration-200`}
                   >
                     <Calendar className="h-4 w-4 mr-2" />
-                    Medication Reminders
+                    {translations.medicationReminders}
                   </Button>
                   <Button
                     variant="outline"
                     className={`w-full justify-start ${
                       theme === 'dark'
-                        ? 'border-zinc-600 text-zinc-300 hover:bg-zinc-700'
-                        : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50'
-                    }`}
+                        ? 'border-gray-600 text-white hover:bg-gray-700'
+                        : 'border-gray-300 text-black hover:bg-gray-50'
+                    } transition-colors duration-200`}
                   >
                     <Heart className="h-4 w-4 mr-2" />
-                    Health Tips
+                    {translations.healthTips}
                   </Button>
                 </CardContent>
               </Card>
@@ -418,20 +417,20 @@ export default function ChatPage() {
               <Card
                 className={`${
                   theme === 'dark'
-                    ? 'bg-zinc-800/50 backdrop-blur-sm border-zinc-700'
-                    : 'bg-white/50 backdrop-blur-sm border-zinc-200'
+                    ? 'bg-gray-800/50 backdrop-blur-sm border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300'
+                    : 'bg-white/50 backdrop-blur-sm border-gray-200 shadow-xl hover:shadow-2xl transition-shadow duration-300'
                 }`}
               >
                 <CardHeader>
-                  <CardTitle className={`text-lg ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
-                    Emergency Numbers
+                  <CardTitle className={`text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                    {translations.emergencyNumbers}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className={`text-sm ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
-                    <p className="font-semibold">Ambulance: 911</p>
-                    <p className="font-semibold">Police: 991</p>
-                    <p className="font-semibold">Fire: 939</p>
+                  <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <p className="font-semibold">{translations.ambulance}</p>
+                    <p className="font-semibold">{translations.police}</p>
+                    <p className="font-semibold">{translations.fire}</p>
                   </div>
                 </CardContent>
               </Card>

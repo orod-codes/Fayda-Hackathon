@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 export default function AuthPage() {
   const { translations, language } = useLanguage();
   const router = useRouter();
@@ -80,18 +82,18 @@ export default function AuthPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-zinc-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-black dark:text-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <Button
           variant="ghost"
           onClick={() => router.push("/")}
-          className="mb-6 text-zinc-400 hover:text-zinc-100"
+          className="mb-6 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors duration-200"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
 
-        <Card className="bg-zinc-800/50 backdrop-blur-sm border-zinc-700">
+        <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-shadow duration-300">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-blue-600 rounded-full flex items-center justify-center">
@@ -103,14 +105,16 @@ export default function AuthPage() {
                 />
               </div>
               <div>
-                <CardTitle className="text-zinc-100 text-2xl">
+                <CardTitle className="text-black dark:text-white text-2xl">
                   Patient Login
                 </CardTitle>
-                <CardDescription className="text-zinc-400">
+                <CardDescription className="text-gray-600 dark:text-gray-400">
                   Fayda ID Authentication Required
                 </CardDescription>
                 <a href={loginUrl}>
-                  <Button>Sign In</Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold transition-colors duration-200">
+                    Sign In
+                  </Button>
                 </a>
               </div>
             </div>
@@ -119,11 +123,11 @@ export default function AuthPage() {
 
         {/* Info Section */}
         <div className="mt-6 text-center">
-          <div className="bg-zinc-800/30 border border-zinc-700 rounded-lg p-4">
-            <h3 className="text-zinc-100 font-semibold mb-2">
+          <div className="bg-white/30 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="text-black dark:text-white font-semibold mb-2">
               For Other Roles
             </h3>
-            <p className="text-zinc-400 text-sm mb-4">
+            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
               Doctors, Hospital Admins, and Super Admins can access their
               dashboards directly.
             </p>
@@ -132,7 +136,7 @@ export default function AuthPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => router.push("/dashboard")}
-                className="w-full border-zinc-600 text-zinc-300 hover:bg-zinc-700"
+                className="w-full border-gray-300 dark:border-gray-600 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
               >
                 <Stethoscope className="h-4 w-4 mr-2" />
                 Doctor Login
@@ -141,7 +145,7 @@ export default function AuthPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => router.push("/dashboard")}
-                className="w-full border-zinc-600 text-zinc-300 hover:bg-zinc-700"
+                className="w-full border-gray-300 dark:border-gray-600 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
               >
                 <Building className="h-4 w-4 mr-2" />
                 Admin Login

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Bell, LogOut, User, Settings } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
 
 interface NavigationProps {
   title?: string
@@ -49,6 +50,7 @@ export function Navigation({
           </div>
         </div>
         <div className="flex items-center space-x-4">
+          <LanguageSwitcher variant="compact" />
           {showThemeToggle && <ThemeToggle />}
           {showNotifications && (
             <Button variant="ghost" size="sm">

@@ -1,3 +1,10 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { importJWK, decodeJwt, SignJWT } from "jose";
 import { getUserInfo } from "../../lib/auth";
 import axios, { isAxiosError } from "axios";
@@ -24,6 +31,8 @@ export const generateSignedJwt = async () => {
     .setExpirationTime("2h")
     .sign(privateKey);
 };
+
+export const dynamic = 'force-dynamic';
 
 const page = async ({
   searchParams,

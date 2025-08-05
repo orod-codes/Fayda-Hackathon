@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+    const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,10 +25,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Login API error:', error);
+    console.error('Registration API error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', message: 'An error occurred during login' },
+      { error: 'Internal server error', message: 'An error occurred during registration' },
       { status: 500 }
     );
   }
-}
+} 

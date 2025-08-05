@@ -5,6 +5,7 @@ import { ThemeToggle } from "@/components/ThemeToggle"
 import { ArrowLeft } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
 
 interface HeaderProps {
   title?: string
@@ -43,6 +44,7 @@ export function Header({
           </div>
         </div>
         <div className="flex items-center space-x-4">
+          <LanguageSwitcher variant="compact" />
           {showThemeToggle && <ThemeToggle />}
           {children}
         </div>
