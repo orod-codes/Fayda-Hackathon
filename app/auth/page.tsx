@@ -96,8 +96,8 @@ export default function AuthPage() {
             <div className="flex items-center justify-center space-x-3 mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-blue-600 rounded-full flex items-center justify-center">
                 <Image
-                  src="/images/hakim-ai-logo.png"
-                  alt="hakim-ai Logo"
+                  src="/images/hakmin-logo.png"
+                  alt="Hakmin Logo"
                   width={24}
                   height={24}
                 />

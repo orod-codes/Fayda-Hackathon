@@ -7,11 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useTheme } from 'next-themes';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { Navigation } from '@/components/Navigation';
 import {
   Send,
   ArrowLeft,
@@ -40,15 +39,17 @@ export default function ChatPage() {
   const { translations, language } = useLanguage();
   const { theme } = useTheme();
   const { user, logout } = useAuth();
+
+
   const router = useRouter();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: "Hello! I'm hakim-ai, your AI health assistant. How can I help you today?",
-      role: 'assistant',
-      timestamp: new Date(),
-    },
-  ]);
+ const [messages, setMessages] = useState<Message[]>([
+  {
+    id: '1',
+    content: `Hello ${user?.name ?? 'there'}, I'm hakim-ai, your AI health assistant. How can I help you today?`,
+    role: 'assistant',
+    timestamp: new Date(),
+  },
+]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isEmergency, setIsEmergency] = useState(false);
@@ -137,29 +138,69 @@ export default function ChatPage() {
 
   return (
     <ProtectedRoute allowedRoles={['patient']} loginRoute="/patient/login">
-      <div className="min-h-screen bg-background text-foreground">
-        <Navigation 
-          title="Health Chat"
-          showBack={true}
-          backRoute="/patient"
-          showUserMenu={false}
+      <div
+        className={`min-h-screen ${
+          theme === 'dark'
+            ? 'bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-zinc-100'
+            : 'bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 text-zinc-900'
+        }`}
+      >
+        {/* Header */}
+        <header
+          className={`border-b backdrop-blur-sm px-6 py-4 ${
+            theme === 'dark' ? 'border-zinc-800/50 bg-zinc-900/50' : 'border-zinc-200/50 bg-white/50'
+          }`}
         >
-                          <Badge className="bg-blue-500/20 text-blue-600 border-blue-500/30 dark:text-blue-400">
-            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-            AI Online
-          </Badge>
-        </Navigation>
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Button
+                variant="ghost"
+                onClick={() => router.push('/patient')}
+                className={`${
+                  theme === 'dark' ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-900'
+                }`}
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Dashboard
+              </Button>
+              <div className="flex items-center space-x-3">
+                <div
+                  className={`w-10 h-10 bg-gradient-to-br from-sky-400 to-blue-600 rounded-xl flex items-center justify-center ${
+                    theme === 'dark' ? 'shadow-lg' : 'shadow-md'
+                  }`}
+                >
+                  <Image src="/images/hakmin-logo.png" alt="Hakmin Logo" width={24} height={24} />
+                </div>
+                <span className={`text-xl font-bold ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
+                  Health Chat
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Badge
+                className={`${
+                  theme === 'dark'
+                    ? 'bg-green-500/20 text-green-400 border-green-500/30'
+                    : 'bg-green-100 text-green-700 border-green-200'
+                }`}
+              >
+                <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                AI Online
+              </Badge>
+            </div>
+          </div>
+        </header>
 
         {/* Emergency Alert */}
         {isEmergency && (
-          <div className="border-l-4 border-destructive p-4 bg-destructive/10">
+          <div className={`border-l-4 border-red-500 p-4 ${theme === 'dark' ? 'bg-red-500/10' : 'bg-red-100'}`}>
             <div className="flex items-center">
-              <AlertTriangle className="h-5 w-5 text-destructive mr-2" />
+              <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
               <div>
-                <p className="font-semibold text-destructive">
+                <p className={`font-semibold ${theme === 'dark' ? 'text-red-300' : 'text-red-800'}`}>
                   Emergency Detected!
                 </p>
-                <p className="text-sm text-destructive/80">
+                <p className={`text-sm ${theme === 'dark' ? 'text-red-400' : 'text-red-700'}`}>
                   Please call emergency services immediately: 911
                 </p>
               </div>
@@ -172,24 +213,36 @@ export default function ChatPage() {
           <div className="flex space-x-6">
             {/* Chat Area */}
             <div className="flex-1">
-              <Card className="h-[700px] flex flex-col">
-                <CardHeader className="border-b border-border">
+              <Card
+                className={`h-[700px] flex flex-col ${
+                  theme === 'dark'
+                    ? 'bg-zinc-800/50 backdrop-blur-sm border-zinc-700'
+                    : 'bg-white/50 backdrop-blur-sm border-zinc-200'
+                }`}
+              >
+                <CardHeader className={`border-b ${theme === 'dark' ? 'border-zinc-700' : 'border-zinc-200'}`}>
                   <div className="flex items-center space-x-3">
                     <Avatar>
-                      <AvatarFallback className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
+                      <AvatarFallback className="bg-gradient-to-r from-sky-400 to-blue-600 text-white">
                         <Bot className="h-4 w-4" />
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <CardTitle className="text-lg">
-                        hakim-ai AI Assistant
+                      <CardTitle className={`text-lg ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
+                        Hakmin AI Assistant
                       </CardTitle>
-                      <p className="text-sm text-muted-foreground">
+                      <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`}>
                         Your AI health companion powered by ChatGPT
                       </p>
                     </div>
-                    <Badge className="ml-auto bg-blue-500/20 text-blue-600 border-blue-500/30 dark:text-blue-400">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
+                    <Badge
+                      className={`ml-auto ${
+                        theme === 'dark'
+                          ? 'bg-green-500/20 text-green-400 border-green-500/30'
+                          : 'bg-green-100 text-green-700 border-green-200'
+                      }`}
+                    >
+                      <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
                       Online
                     </Badge>
                   </div>
@@ -211,8 +264,8 @@ export default function ChatPage() {
                             <AvatarFallback
                               className={
                                 message.role === 'user'
-                                  ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground'
-                                  : 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground'
+                                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
+                                  : 'bg-gradient-to-r from-sky-400 to-blue-600 text-white'
                               }
                             >
                               {message.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
@@ -221,10 +274,14 @@ export default function ChatPage() {
                           <div
                             className={`rounded-lg p-3 ${
                               message.role === 'user'
-                                ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg'
+                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
                                 : message.isEmergency
-                                ? 'bg-destructive/20 border border-destructive/30 text-destructive'
-                                : 'bg-muted/50 text-foreground border border-border/50'
+                                ? theme === 'dark'
+                                  ? 'bg-red-500/20 border border-red-500/30 text-red-300'
+                                  : 'bg-red-100 border border-red-300 text-red-800'
+                                : theme === 'dark'
+                                ? 'bg-zinc-700/50 text-zinc-100 border border-zinc-600/50'
+                                : 'bg-gray-100 text-gray-900'
                             }`}
                           >
                             <p className="text-sm leading-relaxed">{message.content}</p>
@@ -240,19 +297,23 @@ export default function ChatPage() {
                       <div className="flex justify-start">
                         <div className="flex items-start space-x-2">
                           <Avatar className="w-8 h-8">
-                            <AvatarFallback className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
+                            <AvatarFallback className="bg-gradient-to-r from-sky-400 to-blue-600 text-white">
                               <Bot className="h-4 w-4" />
                             </AvatarFallback>
                           </Avatar>
-                          <div className="rounded-lg p-3 bg-muted/50 border border-border/50">
+                          <div
+                            className={`rounded-lg p-3 ${
+                              theme === 'dark' ? 'bg-zinc-700/50 border border-zinc-600/50' : 'bg-gray-100'
+                            }`}
+                          >
                             <div className="flex space-x-1">
-                              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                              <div className="w-2 h-2 bg-sky-400 rounded-full animate-bounce"></div>
                               <div
-                                className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                                className="w-2 h-2 bg-sky-400 rounded-full animate-bounce"
                                 style={{ animationDelay: '0.1s' }}
                               ></div>
                               <div
-                                className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                                className="w-2 h-2 bg-sky-400 rounded-full animate-bounce"
                                 style={{ animationDelay: '0.2s' }}
                               ></div>
                             </div>
@@ -265,20 +326,24 @@ export default function ChatPage() {
                   </div>
                 </CardContent>
 
-                <div className="border-t border-border p-4">
+                <div className={`border-t p-4 ${theme === 'dark' ? 'border-zinc-700' : 'border-zinc-200'}`}>
                   <div className="flex space-x-2">
                     <Input
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
                       onKeyPress={handleKeyPress}
                       placeholder="Type your health question..."
-                      className="flex-1"
+                      className={`flex-1 ${
+                        theme === 'dark'
+                          ? 'bg-zinc-700 border-zinc-600 text-zinc-100 placeholder:text-zinc-400'
+                          : 'bg-white border-zinc-300 text-zinc-900 placeholder:text-zinc-500'
+                      }`}
                       disabled={isLoading}
                     />
                     <Button
                       onClick={handleSendMessage}
                       disabled={isLoading || !inputMessage.trim()}
-                      className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground"
+                      className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
                     >
                       <Send className="h-4 w-4" />
                     </Button>
@@ -289,40 +354,81 @@ export default function ChatPage() {
 
             {/* Quick Actions Sidebar */}
             <div className="w-64 space-y-4">
-              <Card>
+              <Card
+                className={`${
+                  theme === 'dark'
+                    ? 'bg-zinc-800/50 backdrop-blur-sm border-zinc-700'
+                    : 'bg-white/50 backdrop-blur-sm border-zinc-200'
+                }`}
+              >
                 <CardHeader>
-                  <CardTitle className="text-lg">Quick Actions</CardTitle>
+                  <CardTitle className={`text-lg ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
+                    Quick Actions
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <Button
                     variant="outline"
-                    className="w-full justify-start"
+                    className={`w-full justify-start ${
+                      theme === 'dark'
+                        ? 'border-zinc-600 text-zinc-300 hover:bg-zinc-700'
+                        : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50'
+                    }`}
                     onClick={() => router.push('/patient')}
                   >
                     <Phone className="h-4 w-4 mr-2" />
                     Emergency Contacts
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button
+                    variant="outline"
+                    className={`w-full justify-start ${
+                      theme === 'dark'
+                        ? 'border-zinc-600 text-zinc-300 hover:bg-zinc-700'
+                        : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50'
+                    }`}
+                  >
                     <FileText className="h-4 w-4 mr-2" />
                     Upload Documents
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button
+                    variant="outline"
+                    className={`w-full justify-start ${
+                      theme === 'dark'
+                        ? 'border-zinc-600 text-zinc-300 hover:bg-zinc-700'
+                        : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50'
+                    }`}
+                  >
                     <Calendar className="h-4 w-4 mr-2" />
                     Medication Reminders
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button
+                    variant="outline"
+                    className={`w-full justify-start ${
+                      theme === 'dark'
+                        ? 'border-zinc-600 text-zinc-300 hover:bg-zinc-700'
+                        : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50'
+                    }`}
+                  >
                     <Heart className="h-4 w-4 mr-2" />
                     Health Tips
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card
+                className={`${
+                  theme === 'dark'
+                    ? 'bg-zinc-800/50 backdrop-blur-sm border-zinc-700'
+                    : 'bg-white/50 backdrop-blur-sm border-zinc-200'
+                }`}
+              >
                 <CardHeader>
-                  <CardTitle className="text-lg">Emergency Numbers</CardTitle>
+                  <CardTitle className={`text-lg ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}>
+                    Emergency Numbers
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="text-sm text-foreground">
+                  <div className={`text-sm ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
                     <p className="font-semibold">Ambulance: 911</p>
                     <p className="font-semibold">Police: 991</p>
                     <p className="font-semibold">Fire: 939</p>

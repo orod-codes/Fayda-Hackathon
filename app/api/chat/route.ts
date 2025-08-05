@@ -24,8 +24,8 @@ export async function POST(request: NextRequest) {
 			const demoResponses = {
 				en: {
 					hello:
-						"Hello! I'm hakim-ai, your AI health assistant. I'm here to help you with health-related questions. How can I assist you today?",
-					hi: "Hi there! I'm hakim-ai, your AI health assistant. How can I help you today?",
+						"Hello! I'm Hakmin, your AI health assistant. I'm here to help you with health-related questions. How can I assist you today?",
+					hi: "Hi there! I'm Hakmin, your AI health assistant. How can I help you today?",
 					"how are you":
 						"I'm doing well, thank you for asking! I'm here to help you with any health-related questions you might have. What would you like to know?",
 					headache:
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
 						"🚨 EMERGENCY DETECTED! This sounds like a medical emergency. Please call emergency services immediately at 911 or your local emergency number. Do not wait for further advice.",
 					help: "I'm here to help! I can assist you with general health information, symptom assessment, and guidance. What specific health question do you have?",
 					"what can you do":
-						"I'm hakim-ai, your AI health assistant! I can help you with general health information, symptom assessment, wellness tips, and emergency guidance. I can respond in English, Amharic, and Afaan Oromo. What would you like to know?",
+						"I'm Hakmin, your AI health assistant! I can help you with general health information, symptom assessment, wellness tips, and emergency guidance. I can respond in English, Amharic, and Afaan Oromo. What would you like to know?",
 					default:
 						"Thank you for your message! I'm here to help with general health information and guidance. Could you please provide more details about your health concern so I can better assist you? Remember, for specific medical diagnosis or treatment, please consult with a healthcare professional.",
 				},
@@ -76,9 +76,9 @@ export async function POST(request: NextRequest) {
 				},
 				or: {
 					akkam:
-						"Akkam! Ani hakim-ai dha, gorsaa fayyaa AI keessan. Har'a akkamiin isin gargaaruu danda'a?",
+						"Akkam! Ani Hakmin dha, gorsaa fayyaa AI keessan. Har'a akkamiin isin gargaaruu danda'a?",
 					selam:
-						"Selam! Ani hakim-ai dha, gorsaa fayyaa AI keessan. Har'a akkamiin isin gargaaruu danda'a?",
+						"Selam! Ani Hakmin dha, gorsaa fayyaa AI keessan. Har'a akkamiin isin gargaaruu danda'a?",
 					"akka jirta":
 						"Gaarii jiru, galatoomi! Ani isin gargaaruu danda'uuf as jiru. Mallattoo fayyaa waliin walqunnamaa qabaattuu? Maaloo naan himaa?",
 					"dhukkuba mataa":
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
 					gargaarsa:
 						"Gargaarsa kennuu danda'uuf as jiru! Odeeffannoo fayyaa guutuu, qorannoo mallattoo fi qajeelcha balaa kennuu danda'a. Gaaffii fayyaa maaloo qabaattuu?",
 					"maaloo hojjeta":
-						"Ani hakim-ai dha, gorsaa fayyaa AI keessan! Odeeffannoo fayyaa guutuu, qorannoo mallattoo, qajeelcha fayyaa fi balaa kennuu danda'a. Maaloo naan himaa?",
+						"Ani Hakmin dha, gorsaa fayyaa AI keessan! Odeeffannoo fayyaa guutuu, qorannoo mallattoo, qajeelcha fayyaa fi balaa kennuu danda'a. Maaloo naan himaa?",
 					default:
 						"Galatoomi gaaffii keessan! Odeeffannoo fayyaa guutuu fi qajeelcha kennuu danda'uuf as jiru. Maaloo mallattoo keessanii waa'ee odeeffannoo dabalataa nuu kenni naan gargaaruu danda'uuf? Yaadannoo, qorannoo fayyaa guutuu ykn dabalataa argachuuf gorsaa fayyaa waliin walqunnamaa.",
 				},
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
 				messages: [
 					{
 						role: "system",
-						content: `You are a medical AI assistant for Hakim AI  System in Ethiopia. You provide helpful health information and guidance in a supportive manner. You can respond in English, Amharic, or Afaan Oromo based on the user's language preference.
+						content: `You are a medical AI assistant for Hakmin Health System in Ethiopia. You provide helpful health information and guidance in a supportive manner. You can respond in English, Amharic, or Afaan Oromo based on the user's language preference.
 
 IMPORTANT GUIDELINES:
 - Always prioritize patient safety
